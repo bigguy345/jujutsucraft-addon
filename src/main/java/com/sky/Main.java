@@ -29,8 +29,6 @@ public class Main {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final IEventBus EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
-    public static int cooldownTicks;
-    public static boolean TOGGLE_TNT_PLACEMENT;
 
     public Main() {
         EVENT_BUS.addListener(this::commonSetup);
@@ -57,10 +55,7 @@ public class Main {
         ////////////////////////////////
         //Network registry
         PacketHandler.init(event);
-
-
-        // Spawn ender dragon
-        // EntityType.ENDER_DRAGON.spawn((ServerLevel) this.level(),this.blockPosition(), MobSpawnType.COMMAND);
+        
     }
 
     @SubscribeEvent

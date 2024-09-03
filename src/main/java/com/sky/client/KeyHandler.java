@@ -10,16 +10,15 @@ import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyHandler {
-    public static final KeyMapping TNT_TOGGLE = new KeyMapping("key.toggleTnt", // The translation key of the keybinding
+    public static final KeyMapping TNT_TOGGLE = new KeyMapping("key.temp", // The translation key of the keybinding
             GLFW.GLFW_KEY_X, // The default key
-            "key.category.tntShit" // The translation key of the category
+            "key.category.jjc_addon" // The translation key of the category
     );
 
     //Registers all of this mod's keys on game startup
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(TNT_TOGGLE);
     }
-
 
     //This fires whenever a key is pressed (either once, or held down continuously) in game
     public static void onKeyInput(InputEvent.Key event) {
@@ -33,6 +32,4 @@ public class KeyHandler {
             PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
         }
     }
-
-
 }
