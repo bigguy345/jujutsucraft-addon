@@ -4,7 +4,17 @@
   "package": "com.jujutsucraftaddon.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [],
-  "mixins": ["jujutsu.RangeAttackProcedureMixin"],
+  "mixins": ["jujutsu.RangeAttackProcedureMixin",
+    "jujutsu.CooldownFix",
+    "jujutsu.Higuruma",
+    "jujutsu.MahitoFix",
+    "jujutsu.MahitoFix2",
+    "jujutsu.InsectArmorFix",
+    "jujutsu.InsectArmorFix2",
+    "jujutsu.Maki",
+    "jujutsu.RemoveBuffs",
+    "jujutsu.UnlimitedVoid"
+  ],
   "injectors": {
     "defaultRequire": 1
   },
