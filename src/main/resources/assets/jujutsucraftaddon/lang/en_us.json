@@ -1,10 +1,10 @@
 {
-  "item.jjk_addon.sapphire": "Sapphire",
-  "item.jjk_addon.raw_sapphire": "Raw Sapphire",
-  "block.jjk_addon.sapphire_block": "Sapphire Block",
+  "item.jujutsucraftaddon.sapphire": "Sapphire",
+  "item.jujutsucraftaddon.raw_sapphire": "Raw Sapphire",
+  "block.jujutsucraftaddon.sapphire_block": "Sapphire Block",
  
-  "creativetab.item_tab": "Jujutsu Craft Addon",
+  "creativetab.jujutsucraftaddon_tab": "Jujutsu Craft Addon",
   
-  "key.category.jjk_addon": "Jujutsu Craft Addon",
+  "key.category.jujutsucraftaddon": "Jujutsu Craft Addon",
   "key.temp": "Example Key"
 }

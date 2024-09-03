@@ -23,7 +23,7 @@ public class ModItems {
     public static final RegistryObject<Item> RAW_SAPPHIRE = ITEMS.register("raw_sapphire", () -> new Item(new Item.Properties()));
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
-    public static final RegistryObject<CreativeModeTab> ITEMS_TAB = CREATIVE_MODE_TABS.register("items_tab", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).title(Component.translatable("creativetab.item_tab")).icon(() -> Items.TNT.getDefaultInstance()).displayItems((parameters, output) -> {
+    public static final RegistryObject<CreativeModeTab> ITEMS_TAB = CREATIVE_MODE_TABS.register("items_tab", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).title(Component.translatable("creativetab.jujutsucraftaddon_tab")).icon(() -> Items.TNT.getDefaultInstance()).displayItems((parameters, output) -> {
         output.accept(SAPPHIRE_BLOCK_ITEM.get());
     }).build());
 
@@ -33,11 +33,10 @@ public class ModItems {
     }
 
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS)
 
-            if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
-                event.accept(ModItems.SAPPHIRE);
-                event.accept(ModItems.RAW_SAPPHIRE);
-            }
+        if (event.getTabKey() == CreativeModeTabs.INGREDIENTS) {
+            event.accept(ModItems.SAPPHIRE);
+            event.accept(ModItems.RAW_SAPPHIRE);
+        }
     }
 }

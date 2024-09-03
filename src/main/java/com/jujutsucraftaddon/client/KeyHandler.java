@@ -12,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 public class KeyHandler {
     public static final KeyMapping EXAMPLE_KEY = new KeyMapping("key.temp", // The translation key of the keybinding
             GLFW.GLFW_KEY_X, // The default key
-            "key.category.jjk_addon" // The translation key of the category
+            "key.category.jujutsucraftaddon" // The translation key of the category
     );
 
     //Registers all of this mod's keys on game startup

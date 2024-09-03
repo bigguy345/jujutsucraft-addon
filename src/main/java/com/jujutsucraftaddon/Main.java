@@ -11,6 +11,7 @@ import com.jujutsucraftaddon.network.PacketHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,10 +30,9 @@ import software.bernie.geckolib.GeckoLib;
 public class Main {
     public static final String MODID = "jujutsucraftaddon";
     private static final Logger LOGGER = LogUtils.getLogger();
-    public static IEventBus MOD_EVENT_BUS;
+    public static IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
     public Main() {
-        MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
         MOD_EVENT_BUS.addListener(this::commonSetup);
 
         // Blocks & Item registry
@@ -76,6 +76,11 @@ public class Main {
             MinecraftForge.EVENT_BUS.addListener(KeyHandler::onKeyInput);
 
             MOD_EVENT_BUS.addListener(KeyHandler::registerKeyMappings);
+        }
+
+        @SubscribeEvent
+        public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+            KeyHandler.registerKeyMappings(event);
         }
     }
 }

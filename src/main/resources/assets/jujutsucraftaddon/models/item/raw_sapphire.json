@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jjk_addon:item/raw_sapphire"
+    "layer0": "jujutsucraftaddon:item/raw_sapphire"
   }
 }
