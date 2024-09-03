@@ -9,14 +9,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ModCapabilities {
 
     public static final Capability<JujutsuData> PLAYER_JUJUTSU_DATA = CapabilityManager.get(new CapabilityToken<JujutsuData>() {
     });
 
-    @SubscribeEvent
     public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player player) {
             event.addCapability(new ResourceLocation(Main.MODID, "jujutsu_addon"), new JujutsuData.JujutsuDataProvider(player));

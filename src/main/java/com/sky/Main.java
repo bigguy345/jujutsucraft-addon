@@ -4,10 +4,12 @@ import com.mojang.logging.LogUtils;
 import com.sky.Items.ModItems;
 import com.sky.blocks.ModBlocks;
 import com.sky.client.KeyHandler;
+import com.sky.data.capabilities.ModCapabilities;
 import com.sky.entity.ModEntities;
 import com.sky.events.ClientEvents;
 import com.sky.events.CommonEvents;
 import com.sky.network.PacketHandler;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -27,16 +29,15 @@ import software.bernie.geckolib.GeckoLib;
 public class Main {
     public static final String MODID = "sky";
     private static final Logger LOGGER = LogUtils.getLogger();
-    public static final IEventBus EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public static final IEventBus MOD_EVENT_BUS = FMLJavaModLoadingContext.get().getModEventBus();
 
     public Main() {
-        EVENT_BUS.addListener(this::commonSetup);
+        MOD_EVENT_BUS.addListener(this::commonSetup);
 
         // Blocks & Item registry
-        ModItems.registerAllItems(EVENT_BUS);
-        ModBlocks.registerAllBlocks(EVENT_BUS);
-        ModEntities.registerAllEntities(EVENT_BUS);
+        ModItems.registerAllItems(MOD_EVENT_BUS);
+        ModBlocks.registerAllBlocks(MOD_EVENT_BUS);
+        ModEntities.registerAllEntities(MOD_EVENT_BUS);
         GeckoLib.initialize();
     }
 
@@ -50,12 +51,13 @@ public class Main {
         //Event registry
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
-        EVENT_BUS.addListener(ModItems::addCreative);
-
+        MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, ModCapabilities::onAttachCapabilities);
+        
+        MOD_EVENT_BUS.addListener(ModItems::addCreative);
+        
         ////////////////////////////////
         //Network registry
         PacketHandler.init(event);
-        
     }
 
     @SubscribeEvent

@@ -20,8 +20,8 @@ public class CommonEvents {
         //If this event is firing on the client side, cancel it. Ensures everything after this line fires only on server side
         if (event.side == LogicalSide.CLIENT)
             return;
-        
-        if(player.tickCount % 10 == 0)
+
+        if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();
     }
 }
