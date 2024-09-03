@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.jujutsucraftaddon.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [],
+  "mixins": ["jujutsu.RangeAttackProcedureMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mixins.sky.refmap.json"
+}

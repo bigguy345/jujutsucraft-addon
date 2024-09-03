@@ -178,8 +178,8 @@ dependencies {
 }
 mixin {
     // MixinGradle Settings
-    add sourceSets.main, 'mixins.sky.refmap.json'
-    config 'mixins.sky.json'
+    add sourceSets.main, 'mixins.jjk_addon.refmap.json'
+    config 'mixins.jjk_addon.json'
 
     debug.verbose = true
     debug.export = true
