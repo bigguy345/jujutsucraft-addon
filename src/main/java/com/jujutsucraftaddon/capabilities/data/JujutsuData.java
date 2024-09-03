@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.network.PacketDistributor;
 
 public class JujutsuData {
     public Player player;
@@ -39,7 +38,7 @@ public class JujutsuData {
     }
 
     public void syncTracking() {
-        PacketHandler.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), new SyncJujutsuData(this));
+        PacketHandler.sendToTracking(player, new SyncJujutsuData(this,player.getId()));
     }
 
     public static class JujutsuDataProvider implements ICapabilitySerializable<Tag> {
