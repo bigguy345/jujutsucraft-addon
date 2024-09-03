@@ -14,7 +14,7 @@ import net.minecraftforge.network.PacketDistributor;
 
 public class JujutsuData {
     public Player player;
-    public double blackFlashChance = -1;
+    public float blackFlashChance = -1;
 
     public JujutsuData() {
     }
@@ -25,13 +25,13 @@ public class JujutsuData {
 
     public Tag writeNBT() {
         CompoundTag nbt = new CompoundTag();
-        nbt.putDouble("blackFlashChance", blackFlashChance);
+        nbt.putFloat("blackFlashChance", blackFlashChance);
         return nbt;
     }
 
     public void readNBT(Tag tag) {
         CompoundTag nbt = (CompoundTag) tag;
-        blackFlashChance = nbt.getDouble("blackFlashChance");
+        blackFlashChance = nbt.getFloat("blackFlashChance");
     }
 
     public static JujutsuData get(Player player) {
