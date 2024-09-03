@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.sky.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [],
+  "mixins": ["RangeAttackProcedureMixin"],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "mixins.sky.refmap.json"
+}
