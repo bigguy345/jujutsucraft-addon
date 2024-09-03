@@ -1,5 +1,6 @@
 package com.sky.events;
 
+import com.sky.data.JujutsuData;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -19,5 +20,8 @@ public class CommonEvents {
         //If this event is firing on the client side, cancel it. Ensures everything after this line fires only on server side
         if (event.side == LogicalSide.CLIENT)
             return;
+        
+        if(player.tickCount % 10 == 0)
+            JujutsuData.get(player).syncTracking();
     }
 }
