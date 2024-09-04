@@ -173,6 +173,7 @@ dependencies {
     implementation fg.deobf('blank:JujutsuCraft-ver40-forge-1.20.1:40')
     implementation fg.deobf('blank:player-animation-lib-forge:1.0.2-rc1+1.20')
     implementation fg.deobf('blank:JujutsuCraftGT2.ver39.1:2')
+    implementation fg.deobf('blank:RPG-HUD:3.10')
 
 
 }
