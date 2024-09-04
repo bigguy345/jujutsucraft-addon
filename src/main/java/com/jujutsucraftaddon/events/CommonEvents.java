@@ -4,6 +4,7 @@ import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
+import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
@@ -27,15 +28,19 @@ public class CommonEvents {
 
         if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();
+
+       // JujutsucraftModVariables.PlayerVariables jjcData = JujutsuData.get(player).getPlayerVariables();
+        //jjcData.PlayerCursePowerFormer = jjcData.PlayerCursePower;
     }
 
     @SubscribeEvent
     public void onBlackFlash(BlackFlashEvent event) {
         if (event.attacker.level().isClientSide())
             return;
-        
+
         if (event.attacker instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
+            JujutsucraftModVariables.PlayerVariables jjcData = data.getPlayerVariables();
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
 
             float damageMulti = data.blackFlashDamageMulti;
@@ -44,21 +49,28 @@ public class CommonEvents {
                 switch (zone.getAmplifier()) {
                     case 0:
                         zoneDamageMulti = ValueUtil.randomBetween(1, 1.5f);
+                        jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.25f;
                         break;
                     case 1:
                         zoneDamageMulti = ValueUtil.randomBetween(1, 2f);
+                        jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.15f;
                         break;
                     case 2:
                         zoneDamageMulti = ValueUtil.randomBetween(1, 2.5f);
+                        jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.1f;
                         break;
                     case 3:
                         zoneDamageMulti = ValueUtil.randomBetween(1, 3f);
+                        jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.05f;
                         break;
                     case 4:
                         zoneDamageMulti = ValueUtil.randomBetween(1, 3.5f);
                         break;
                 }
+            } else {
+                jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.3f;
             }
+
             event.damage = event.damage / 4 * damageMulti * zoneDamageMulti;
         }
     }
