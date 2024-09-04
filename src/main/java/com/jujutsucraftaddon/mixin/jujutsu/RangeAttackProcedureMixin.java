@@ -39,10 +39,10 @@ public class RangeAttackProcedureMixin {
                     case 0:
                         blackFlashChance += 0.05f;
                     case 1:
-                        blackFlashChance += 0.1f;
+                        blackFlashChance += 0.075f;
                         break;
                     case 2:
-                        blackFlashChance += 0.15f;
+                        blackFlashChance += 0.1f;
                         break;
                     case 3:
                         blackFlashChance += 0.2f;
@@ -52,6 +52,17 @@ public class RangeAttackProcedureMixin {
                         break;
                 }
             }
+
+            double weakCharge = entity.getPersistentData().getDouble("cnt5");
+            blackFlashChance += weakCharge * (data.landedFirstBlackFlash ? 0.0075 : 0.0025f);
+
+            double strongCharge = entity.getPersistentData().getDouble("cnt6");
+            if (strongCharge >= 1 && strongCharge < 2)
+                blackFlashChance += data.landedFirstBlackFlash ? 0.0375 : 0.0125;
+            else if (strongCharge >= 2 && strongCharge < 3)
+                blackFlashChance += data.landedFirstBlackFlash ? 0.075 : 0.025;
+            else if (strongCharge >= 3)
+                blackFlashChance += data.landedFirstBlackFlash ? 0.15 : 0.05;
 
 
             boolean blackFlash = Math.random() < blackFlashChance ? true : false;
@@ -65,7 +76,7 @@ public class RangeAttackProcedureMixin {
         if (!blackFlash.get())
             return;
 
-        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get(), knockback.get());
+        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get() /4, knockback.get());
         MinecraftForge.EVENT_BUS.post(event);
 
         damage_sorce.set(event.damage);
