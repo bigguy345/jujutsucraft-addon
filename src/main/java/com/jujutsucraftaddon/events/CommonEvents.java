@@ -73,6 +73,7 @@ public class CommonEvents {
                         break;
                 }
             } else {
+                zoneKnockbackMulti = 5;
                 jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.3f;
             }
 
