@@ -54,15 +54,15 @@ public class RangeAttackProcedureMixin {
             }
 
             double weakCharge = entity.getPersistentData().getDouble("cnt5");
-            blackFlashChance += weakCharge * (data.landedFirstBlackFlash ? 0.0075 : 0.0025f);
+            blackFlashChance += weakCharge * (data.landedFirstBlackFlash ? 0.001 : 0);
 
             double strongCharge = entity.getPersistentData().getDouble("cnt6");
             if (strongCharge >= 1 && strongCharge < 2)
-                blackFlashChance += data.landedFirstBlackFlash ? 0.0375 : 0.0125;
+                blackFlashChance += data.landedFirstBlackFlash ? 0.025 : 0;
             else if (strongCharge >= 2 && strongCharge < 3)
-                blackFlashChance += data.landedFirstBlackFlash ? 0.075 : 0.025;
+                blackFlashChance += data.landedFirstBlackFlash ? 0.05 : 0;
             else if (strongCharge >= 3)
-                blackFlashChance += data.landedFirstBlackFlash ? 0.15 : 0.05;
+                blackFlashChance += data.landedFirstBlackFlash ? 0.1 : 0;
 
 
             boolean blackFlash = Math.random() < blackFlashChance ? true : false;
