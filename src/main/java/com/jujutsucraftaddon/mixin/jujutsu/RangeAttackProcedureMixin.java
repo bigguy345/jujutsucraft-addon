@@ -37,18 +37,18 @@ public class RangeAttackProcedureMixin {
             if (zone != null) {
                 switch (zone.getAmplifier()) {
                     case 0:
-                        blackFlashChance += 0.05f;
+                        blackFlashChance += 0.025f;
                     case 1:
-                        blackFlashChance += 0.075f;
+                        blackFlashChance += 0.05f;
                         break;
                     case 2:
-                        blackFlashChance += 0.1f;
+                        blackFlashChance += 0.075f;
                         break;
                     case 3:
-                        blackFlashChance += 0.2f;
+                        blackFlashChance += 0.1f;
                         break;
                     default:
-                        blackFlashChance += 0.45f;
+                        blackFlashChance += 0.25f;
                         break;
                 }
             }
@@ -76,7 +76,7 @@ public class RangeAttackProcedureMixin {
         if (!blackFlash.get())
             return;
 
-        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get() /4, knockback.get());
+        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get() / 4, knockback.get());
         MinecraftForge.EVENT_BUS.post(event);
 
         damage_sorce.set(event.damage);
@@ -86,14 +86,28 @@ public class RangeAttackProcedureMixin {
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 5))
     private static boolean blackFlashIncreasesZone(LivingEntity instance, MobEffectInstance p_21165_) {
         MobEffectInstance zone = instance.getEffect(JujutsucraftModMobEffects.ZONE.get());
-
         if (zone != null) {
             if (zone.getAmplifier() < 4) {
                 instance.removeEffect(JujutsucraftModMobEffects.ZONE.get());
-                return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 6000 - (zone.getAmplifier() + 1) * 1200, zone.getAmplifier() + 1, true, true));
+                int duration = 0;
+                switch (zone.getAmplifier()) {
+                    case 0:
+                        duration = 3600;
+                        break;
+                    case 1:
+                        duration = 2400;
+                        break;
+                    case 2:
+                        duration = 1800;
+                        break;
+                    default:
+                        duration = 1200;
+                        break;
+                }
+                return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), duration, zone.getAmplifier() + 1, true, true));
             } else
                 return false;
         } else
-            return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 6000, 0, true, true));
+            return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
     }
 }
