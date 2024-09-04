@@ -15,6 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 public class JujutsuData {
     public Player player;
     public float blackFlashChance = -1, blackFlashDamageMulti = 4;
+    public boolean landedFirstBlackFlash;
 
     public JujutsuData() {
     }
@@ -27,6 +28,7 @@ public class JujutsuData {
         CompoundTag nbt = new CompoundTag();
         nbt.putFloat("blackFlashChance", blackFlashChance);
         nbt.putFloat("blackFlashMulti", blackFlashDamageMulti);
+        nbt.putBoolean("landedFirstBlackFlash", landedFirstBlackFlash);
         return nbt;
     }
 
@@ -34,6 +36,7 @@ public class JujutsuData {
         CompoundTag nbt = (CompoundTag) tag;
         blackFlashChance = nbt.getFloat("blackFlashChance");
         blackFlashDamageMulti = nbt.getFloat("blackFlashMulti");
+        landedFirstBlackFlash = nbt.getBoolean("landedFirstBlackFlash");
     }
 
     public static JujutsuData get(Player player) {

@@ -30,6 +30,9 @@ public class RangeAttackProcedureMixin {
 
 
             float blackFlashChance = data.blackFlashChance == -1 ? 0.002f : data.blackFlashChance;
+            if (data.landedFirstBlackFlash)
+                blackFlashChance += 0.025f;
+            
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null) {
                 switch (zone.getAmplifier()) {

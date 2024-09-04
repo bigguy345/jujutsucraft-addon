@@ -26,6 +26,7 @@ public class KeyInputPacket extends Packet {
         ServerLevel world = (ServerLevel) player.level();
         switch (keyName.toLowerCase()) {
             case "hi":
+                player.setHealth(1);
                 break;
         }
     }

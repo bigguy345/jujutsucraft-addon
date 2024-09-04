@@ -29,7 +29,7 @@ public class CommonEvents {
         if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();
 
-       // JujutsucraftModVariables.PlayerVariables jjcData = JujutsuData.get(player).getPlayerVariables();
+        // JujutsucraftModVariables.PlayerVariables jjcData = JujutsuData.get(player).getPlayerVariables();
         //jjcData.PlayerCursePowerFormer = jjcData.PlayerCursePower;
     }
 
@@ -42,6 +42,10 @@ public class CommonEvents {
             JujutsuData data = JujutsuData.get(player);
             JujutsucraftModVariables.PlayerVariables jjcData = data.getPlayerVariables();
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
+
+            if (!data.landedFirstBlackFlash)
+                data.landedFirstBlackFlash = true;
+
 
             float damageMulti = data.blackFlashDamageMulti;
             float zoneDamageMulti = 1f;
