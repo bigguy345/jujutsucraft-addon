@@ -3,6 +3,7 @@ package com.jujutsucraftaddon.mixin.jujutsu;
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
+import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import net.mcreator.jujutsucraft.procedures.RangeAttackProcedure;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class RangeAttackProcedureMixin {
 
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getBoolean(Ljava/lang/String;)Z", ordinal = 2, shift = At.Shift.BEFORE))
-    private static void blackFlashChance(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "BlackFlash") LocalBooleanRef BlackFlash, @Local(name = "blackflashable") LocalBooleanRef blackflashable) {
+    private static void blackFlashChance(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "BlackFlash") LocalBooleanRef BlackFlash, @Local(name = "blackflashable") LocalBooleanRef blackflashable, @Local(name = "damage_source_player") LocalDoubleRef damage_source_player) {
         if (entity instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
 
@@ -26,6 +27,9 @@ public class RangeAttackProcedureMixin {
             boolean blackFlash = Math.random() < data.blackFlashChance ? true : false;
             BlackFlash.set(blackFlash);
             blackflashable.set(blackFlash);
+
+            if (blackFlash)
+                damage_source_player.set(damage_source_player.get() / 4 * data.blackFlashDamageMulti);
         }
     }
 }

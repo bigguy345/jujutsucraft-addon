@@ -3,6 +3,7 @@ package com.jujutsucraftaddon.capabilities.data;
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
+import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -13,7 +14,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class JujutsuData {
     public Player player;
-    public float blackFlashChance = -1;
+    public float blackFlashChance = -1, blackFlashDamageMulti = 4;
 
     public JujutsuData() {
     }
@@ -25,20 +26,26 @@ public class JujutsuData {
     public Tag writeNBT() {
         CompoundTag nbt = new CompoundTag();
         nbt.putFloat("blackFlashChance", blackFlashChance);
+        nbt.putFloat("blackFlashMulti", blackFlashDamageMulti);
         return nbt;
     }
 
     public void readNBT(Tag tag) {
         CompoundTag nbt = (CompoundTag) tag;
         blackFlashChance = nbt.getFloat("blackFlashChance");
+        blackFlashDamageMulti = nbt.getFloat("blackFlashMulti");
     }
 
     public static JujutsuData get(Player player) {
         return player.getCapability(ModCapabilities.PLAYER_JUJUTSU_DATA, (Direction) null).orElse(new JujutsuData(player));
     }
 
+    public JujutsucraftModVariables.PlayerVariables getPlayerVariables() {
+        return player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables());
+    }
+
     public void syncTracking() {
-        PacketHandler.sendToTracking(player, new SyncJujutsuData(this,player.getId()));
+        PacketHandler.sendToTracking(player, new SyncJujutsuData(this, player.getId()));
     }
 
     public static class JujutsuDataProvider implements ICapabilitySerializable<Tag> {
