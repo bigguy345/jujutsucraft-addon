@@ -77,7 +77,7 @@ public class CommonEvents {
                 jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.3f;
             }
 
-            event.damage *= damageMulti * zoneDamageMulti / 2f;
+            event.damage *= damageMulti * zoneDamageMulti;
 
             double weakCharge = event.attacker.getPersistentData().getDouble("cnt5");
             double weakChargeKnockback = weakCharge == 0 ? 1 : weakCharge * 0.0025f;

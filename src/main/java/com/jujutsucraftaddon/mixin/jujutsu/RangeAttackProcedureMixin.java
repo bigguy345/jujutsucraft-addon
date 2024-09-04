@@ -2,6 +2,7 @@ package com.jujutsucraftaddon.mixin.jujutsu;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
+import com.jujutsucraftaddon.utility.ValueUtil;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
@@ -31,7 +32,7 @@ public class RangeAttackProcedureMixin {
 
             float blackFlashChance = data.blackFlashChance == -1 ? 0.002f : data.blackFlashChance;
             if (data.landedFirstBlackFlash)
-                blackFlashChance += 0.025f;
+                blackFlashChance += 0.0125f;
 
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null) {
@@ -48,7 +49,7 @@ public class RangeAttackProcedureMixin {
                         blackFlashChance += 0.1f;
                         break;
                     default:
-                        blackFlashChance += 0.25f;
+                        blackFlashChance += ValueUtil.randomBetween(0.03f,0.06f);
                         break;
                 }
             }
@@ -58,11 +59,11 @@ public class RangeAttackProcedureMixin {
 
             double strongCharge = entity.getPersistentData().getDouble("cnt6");
             if (strongCharge >= 1 && strongCharge < 2)
-                blackFlashChance += data.landedFirstBlackFlash ? 0.025 : 0;
+                blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.0125f, 0.0375f) : 0;
             else if (strongCharge >= 2 && strongCharge < 3)
-                blackFlashChance += data.landedFirstBlackFlash ? 0.05 : 0;
+                blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.025f, 0.075f) : 0;
             else if (strongCharge >= 3)
-                blackFlashChance += data.landedFirstBlackFlash ? 0.1 : 0;
+                blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.075f, 0.15f) : 0;
 
 
             boolean blackFlash = Math.random() < blackFlashChance ? true : false;
@@ -76,7 +77,7 @@ public class RangeAttackProcedureMixin {
         if (!blackFlash.get())
             return;
 
-        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get() / 4, knockback.get());
+        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get() / 8, knockback.get());
         MinecraftForge.EVENT_BUS.post(event);
 
         damage_sorce.set(event.damage);
