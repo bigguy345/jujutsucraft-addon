@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "com.jujutsucraftaddon.mixin",
   "compatibilityLevel": "JAVA_17",
-  "client": [],
+  "client": ["jujutsu.CooldownGuiFix"],
   "mixins": [
     "jujutsu.RangeAttackProcedureMixin",
     "jujutsu.RCTKeyBindPressedMixin",
