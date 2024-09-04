@@ -32,7 +32,7 @@ public class RangeAttackProcedureMixin {
             float blackFlashChance = data.blackFlashChance == -1 ? 0.002f : data.blackFlashChance;
             if (data.landedFirstBlackFlash)
                 blackFlashChance += 0.025f;
-            
+
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null) {
                 switch (zone.getAmplifier()) {
@@ -61,14 +61,15 @@ public class RangeAttackProcedureMixin {
     }
 
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/mcreator/jujutsucraft/procedures/CursedToolsAbilityProcedure;execute(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/entity/Entity;)V", ordinal = 0, shift = At.Shift.BEFORE))
-    private static void blackFlashEvent(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "entityiterator") LocalRef<Entity> attacked, @Local(name = "damage_sorce") LocalDoubleRef damage_sorce, @Local(name = "highPower") LocalBooleanRef blackFlash) {
+    private static void blackFlashEvent(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "knockback") LocalDoubleRef knockback, @Local(name = "entityiterator") LocalRef<Entity> attacked, @Local(name = "damage_sorce") LocalDoubleRef damage_sorce, @Local(name = "highPower") LocalBooleanRef blackFlash) {
         if (!blackFlash.get())
             return;
 
-        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get());
+        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get(), knockback.get());
         MinecraftForge.EVENT_BUS.post(event);
 
         damage_sorce.set(event.damage);
+        knockback.set(event.knockback);
     }
 
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 5))

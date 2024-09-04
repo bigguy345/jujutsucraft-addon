@@ -6,12 +6,13 @@ import net.minecraftforge.eventbus.api.Event;
 
 public class BlackFlashEvent extends Event {
     public Entity attacker, attacked;
-    public double damage;
+    public double damage,knockback;
 
-    public BlackFlashEvent(Entity attacker, Entity attacked, double damage) {
+    public BlackFlashEvent(Entity attacker, Entity attacked, double damage,double knockback) {
         this.attacker = attacker;
         this.attacked = attacked;
         this.damage = damage;
+        this.knockback = knockback;
     }
 
     @Override

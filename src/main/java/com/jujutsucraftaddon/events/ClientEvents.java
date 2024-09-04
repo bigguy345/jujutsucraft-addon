@@ -16,15 +16,5 @@ public class ClientEvents {
         Player player = mc.player;
         if (player == null)
             return;
-
-//        boolean isStickHeld = player.getMainHandItem().is(ModItems.BOOM_STICK.get());
-//        boolean isRightClickDown = mc.options.keyUse.isDown();
-//        if (isStickHeld && isRightClickDown) {
-//            PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("tntCannon"));
-//        }   
-//        boolean isClusterStickHeld = player.getMainHandItem().is(ModItems.CLUSTER_STICK.get());
-//        if (isClusterStickHeld && isRightClickDown) {
-//            PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("clustercannon"));
-//        }
     }
 }
