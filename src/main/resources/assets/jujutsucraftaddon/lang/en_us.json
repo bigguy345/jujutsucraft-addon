@@ -6,5 +6,7 @@
   "creativetab.jujutsucraftaddon_tab": "Jujutsu Craft Addon",
   
   "key.category.jujutsucraftaddon": "Jujutsu Craft Addon",
-  "key.temp": "Example Key"
+  "key.temp": "Example Key",
+
+  "effect.jujutsucraftaddon.cursed_energy_regen": "Cursed Energy Regeneration"
 }

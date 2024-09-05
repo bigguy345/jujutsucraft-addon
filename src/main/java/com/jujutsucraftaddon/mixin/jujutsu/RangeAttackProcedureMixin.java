@@ -89,7 +89,6 @@ public class RangeAttackProcedureMixin {
         MobEffectInstance zone = instance.getEffect(JujutsucraftModMobEffects.ZONE.get());
         if (zone != null) {
             if (zone.getAmplifier() < 4) {
-                instance.removeEffect(JujutsucraftModMobEffects.ZONE.get());
                 int duration = 0;
                 switch (zone.getAmplifier()) {
                     case 0:
@@ -105,6 +104,7 @@ public class RangeAttackProcedureMixin {
                         duration = 1200;
                         break;
                 }
+                instance.removeEffect(JujutsucraftModMobEffects.ZONE.get());
                 return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), duration, zone.getAmplifier() + 1, true, true));
             } else
                 return false;

@@ -4,6 +4,7 @@ import com.jujutsucraftaddon.Items.ModItems;
 import com.jujutsucraftaddon.blocks.ModBlocks;
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
 import com.jujutsucraftaddon.client.KeyHandler;
+import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.entity.ModEntities;
 import com.jujutsucraftaddon.events.ClientEvents;
 import com.jujutsucraftaddon.events.CommonEvents;
@@ -39,6 +40,7 @@ public class Main {
         ModItems.registerAllItems(MOD_EVENT_BUS);
         ModBlocks.registerAllBlocks(MOD_EVENT_BUS);
         ModEntities.registerAllEntities(MOD_EVENT_BUS);
+        ModEffects.registerAllEffects(MOD_EVENT_BUS);
         GeckoLib.initialize();
     }
 
