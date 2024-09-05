@@ -8,5 +8,7 @@
   "key.category.jujutsucraftaddon": "Jujutsu Craft Addon",
   "key.temp": "Example Key",
 
-  "effect.jujutsucraftaddon.cursed_energy_regen": "Cursed Energy Regeneration"
+  "effect.jujutsucraftaddon.cursed_energy_regen": "Cursed Energy Regeneration",
+  "effect.jujutsucraftaddon.cost_reduction": "Cost Reduction"
+
 }
