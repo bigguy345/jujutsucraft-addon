@@ -5,10 +5,8 @@ import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffect;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -46,10 +44,7 @@ public class CommonEvents {
             if (!data.landedFirstBlackFlash)
                 data.landedFirstBlackFlash = true;
 
-            int fatigueDuration = player.hasEffect(JujutsucraftModMobEffects.FATIGUE.get()) ? player.getEffect(JujutsucraftModMobEffects.FATIGUE.get()).getDuration() : 0;
-            int fatigueAmplifier = player.hasEffect(JujutsucraftModMobEffects.FATIGUE.get()) ? player.getEffect(JujutsucraftModMobEffects.FATIGUE.get()).getAmplifier() : -1;
-            int unstableDuration = player.hasEffect(JujutsucraftModMobEffects.UNSTABLE.get()) ? player.getEffect(JujutsucraftModMobEffects.UNSTABLE.get()).getDuration() : 0;
-            int unstableAmplifier = player.hasEffect(JujutsucraftModMobEffects.UNSTABLE.get()) ? player.getEffect(JujutsucraftModMobEffects.UNSTABLE.get()).getAmplifier() : -1;
+
             int debuffRecoverAmmount = 5;
             float damageMulti = data.blackFlashDamageMulti;
             float zoneDamageMulti = 1f, zoneKnockbackMulti = 1f, debuffRecoverChance = 0.3f, unstableRecoverChance = 0.1f;
@@ -94,31 +89,49 @@ public class CommonEvents {
                 jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.3f;
             }
 
-            if(jjcData.PlayerCursePower>jjcData.PlayerCursePowerMAX){
-                jjcData.PlayerCursePower=jjcData.PlayerCursePowerMAX;
+            if (jjcData.PlayerCursePower > jjcData.PlayerCursePowerMAX) {
+                jjcData.PlayerCursePower = jjcData.PlayerCursePowerMAX;
             }
 
-            double randomDebuff = Math.random();
-            boolean recoverUnstable = false;
-            boolean recoverFatigue = false;
-            debuffRecoverAmmount = debuffRecoverAmmount*20;
-            if(randomDebuff<=debuffRecoverChance){
+            double random = Math.random();
 
-                if(fatigueAmplifier!=-1 && unstableAmplifier!=-1){
-                    if(randomDebuff<=(unstableRecoverChance*0.5)){recoverUnstable = true; recoverFatigue = true;}
-                    else if(randomDebuff<=unstableRecoverChance){recoverUnstable = true;}
-                    else{recoverFatigue = true;}
-                }
-                else if(unstableAmplifier==-1){recoverFatigue = true;}
-                else{recoverUnstable = true;}
+            debuffRecoverAmmount = debuffRecoverAmmount * 20;
+            
+            
+            //I want it so debuffRecoverChance succeeding removes all debuffs, and not just certain ones
+            if (random <= debuffRecoverChance) {
 
-                if(recoverFatigue){
+                //                boolean recoverUnstable = false;
+                //                boolean recoverFatigue = false;
+                //                if (fatigue != null && unstable != null) {
+                //                    if (random <= (unstableRecoverChance * 0.5)) {
+                //                        recoverUnstable = true;
+                //                        recoverFatigue = true;
+                //                    } else if (random <= unstableRecoverChance) {
+                //                        recoverUnstable = true;
+                //                    } else {
+                //                        recoverFatigue = true;
+                //                    }
+                //                } else if (unstable != null) {
+                //                    recoverFatigue = true;
+                //                } else {
+                //                    recoverUnstable = true;
+                //                }
+
+                //////////////////////////////////////////////
+                //////////////////////////////////////////////
+                // I removed fatigueDuration, unstableDuration, fatigueAmplifer and unstableAmplifier
+                // Below is a more  efficient way of checking these status effects. If the below  doesn't do what you intended with the above vars lemme know
+                MobEffectInstance fatigue = player.getEffect(JujutsucraftModMobEffects.FATIGUE.get());
+                if (fatigue != null) {
                     player.removeEffect(JujutsucraftModMobEffects.FATIGUE.get());
-                    player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.FATIGUE.get(),(int)(fatigueDuration-debuffRecoverAmmount*ValueUtil.randomBetween(1, 1.2f)),fatigueAmplifier,false,true));
+                    player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.FATIGUE.get(), (int) (fatigue.getDuration() - debuffRecoverAmmount * ValueUtil.randomBetween(1, 1.2f)), fatigue.getAmplifier(), false, true));
                 }
-                if(recoverUnstable){
+
+                MobEffectInstance unstable = player.getEffect(JujutsucraftModMobEffects.UNSTABLE.get());
+                if (unstable != null) {
                     player.removeEffect(JujutsucraftModMobEffects.UNSTABLE.get());
-                    player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.UNSTABLE.get(),(int)(unstableDuration-debuffRecoverAmmount*ValueUtil.randomBetween(1, 1.2f)),unstableAmplifier,false,false));
+                    player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.UNSTABLE.get(), (int) (unstable.getDuration() - debuffRecoverAmmount * ValueUtil.randomBetween(1, 1.2f)), unstable.getAmplifier(), false, false));
                 }
             }
 
