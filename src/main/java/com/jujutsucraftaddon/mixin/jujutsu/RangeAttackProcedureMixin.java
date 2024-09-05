@@ -39,7 +39,8 @@ public class RangeAttackProcedureMixin {
             if(playerCurseTechnique==21){blackFlashChance+=0.005f;}
 
             //Nanami Fix, I think? ???
-            if(player.hasEffect(JujutsucraftModMobEffects.SPECIAL.get())){blackFlashChance+=0.007f;}
+            if(player.hasEffect(JujutsucraftModMobEffects.SPECIAL.get())){
+                if(player.getEffect(JujutsucraftModMobEffects.SPECIAL.get()).getAmplifier()>0){blackFlashChance+=0.007f;}}
 
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null) {
