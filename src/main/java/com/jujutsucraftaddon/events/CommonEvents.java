@@ -7,7 +7,6 @@ import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
@@ -45,8 +44,39 @@ public class CommonEvents {
 
             if (!data.landedFirstBlackFlash)
                 data.landedFirstBlackFlash = true;
+            
+            /////////////////////////////////////////////////
+            /////////////////////////////////////////////////
+            //Give or update player's Zone
+            if (zone != null) {
+                if (zone.getAmplifier() < 4) {
+                    int duration = 0;
+                    switch (zone.getAmplifier()) {
+                        case 0:
+                            duration = 3600;
+                            break;
+                        case 1:
+                            duration = 2400;
+                            break;
+                        case 2:
+                            duration = 1800;
+                            break;
+                        default:
+                            duration = 1200;
+                            break;
+                    }
 
+                    IMobEffectInstance effect = (IMobEffectInstance) zone;
+                    effect.setDuration(duration);
+                    effect.setDuration(zone.getAmplifier() + 1);
+                    effect.updateClient(player);
+                }
+            } else
+                player.addEffect(zone = new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
 
+            /////////////////////////////////////////////////
+            /////////////////////////////////////////////////
+            //Zone multiplier and chances handling
             int debuffRecoverAmmount = 5;
             float damageMulti = data.blackFlashDamageMulti;
             float zoneDamageMulti = 1f, zoneKnockbackMulti = 1f, costReductionChance = 0, cooldownReductionChance = 0, debuffRecoverChance = 0.3f;
@@ -118,6 +148,11 @@ public class CommonEvents {
                 zoneKnockbackMulti = 5;
                 jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.3f;
             }
+            
+            //////////////////////////////////////////////////
+            //////////////////////////////////////////////////
+            //Main BF damage handling
+            event.damage *= damageMulti * zoneDamageMulti;
 
             if (jjcData.PlayerCursePower > jjcData.PlayerCursePowerMAX) {
                 jjcData.PlayerCursePower = jjcData.PlayerCursePowerMAX;
@@ -128,7 +163,10 @@ public class CommonEvents {
             debuffRecoverAmmount = debuffRecoverAmmount * 20;
 
 
-            //I want it so debuffRecoverChance succeeding removes all debuffs, and not just certain ones
+            //////////////////////////////////////////////////
+            //////////////////////////////////////////////////
+            //Remove debuffs ,I want it so debuffRecoverChance succeeding removes all debuffs, and not just certain ones
+            
             if (random <= debuffRecoverChance) {
 
                 //                boolean recoverUnstable = false;
@@ -167,6 +205,10 @@ public class CommonEvents {
                 }
             }
 
+
+            /////////////////////////////////////////////////
+            /////////////////////////////////////////////////
+            //Give player buffs 
             if (Math.random() <= costReductionChance) {
                 MobEffectInstance costReduction = player.getEffect(ModEffects.COST_REDUCTION.get());
                 if (costReduction != null) {
@@ -194,8 +236,10 @@ public class CommonEvents {
             }
 
 
-            event.damage *= damageMulti * zoneDamageMulti;
 
+            ///////////////////////////////////////////////////
+            ////////////////////////////////////////////////////
+            //Charged attack handling (extra knockback & damage)
             double weakCharge = event.attacker.getPersistentData().getDouble("cnt5");
             double weakChargeKnockback = weakCharge == 0 ? 1 : weakCharge * 0.0025f;
             double strongCharge = event.attacker.getPersistentData().getDouble("cnt6");

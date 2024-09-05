@@ -49,7 +49,7 @@ public class RangeAttackProcedureMixin {
                         blackFlashChance += 0.1f;
                         break;
                     default:
-                        blackFlashChance += ValueUtil.randomBetween(0.2f,0.6f);
+                        blackFlashChance += ValueUtil.randomBetween(0.2f, 0.6f);
                         break;
                 }
             }
@@ -86,29 +86,9 @@ public class RangeAttackProcedureMixin {
 
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 5))
     private static boolean blackFlashIncreasesZone(LivingEntity instance, MobEffectInstance p_21165_) {
-        MobEffectInstance zone = instance.getEffect(JujutsucraftModMobEffects.ZONE.get());
-        if (zone != null) {
-            if (zone.getAmplifier() < 4) {
-                int duration = 0;
-                switch (zone.getAmplifier()) {
-                    case 0:
-                        duration = 3600;
-                        break;
-                    case 1:
-                        duration = 2400;
-                        break;
-                    case 2:
-                        duration = 1800;
-                        break;
-                    default:
-                        duration = 1200;
-                        break;
-                }
-                instance.removeEffect(JujutsucraftModMobEffects.ZONE.get());
-                return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), duration, zone.getAmplifier() + 1, true, true));
-            } else
-                return false;
-        } else
-            return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
+        if (instance instanceof Player)
+            return false;
+        
+        return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
     }
 }
