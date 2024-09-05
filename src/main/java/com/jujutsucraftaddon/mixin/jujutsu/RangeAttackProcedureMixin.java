@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
+import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.mcreator.jujutsucraft.procedures.RangeAttackProcedure;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -30,10 +31,15 @@ public class RangeAttackProcedureMixin {
         if (entity instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
 
+            double playerCurseTechnique = player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables()).PlayerCurseTechnique2;
 
             float blackFlashChance = data.blackFlashChance == -1 ? 0.002f : data.blackFlashChance;
-            if (data.landedFirstBlackFlash)
-                blackFlashChance += 0.0125f;
+
+            //Yuji Fix, extra 0.55% chance to black flash if ur yuji
+            if(playerCurseTechnique==21){blackFlashChance+=0.005f;}
+
+            //Nanami Fix, I think? ???
+            if(player.hasEffect(JujutsucraftModMobEffects.SPECIAL.get())){blackFlashChance+=0.007f;}
 
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null) {
@@ -50,16 +56,21 @@ public class RangeAttackProcedureMixin {
                         blackFlashChance += 0.1f;
                         break;
                     default:
-                        blackFlashChance += ValueUtil.randomBetween(0.2f, 0.6f);
+                        blackFlashChance += ValueUtil.randomBetween(0.3f,0.6f);
                         break;
                 }
             }
 
             double weakCharge = entity.getPersistentData().getDouble("cnt5");
-            blackFlashChance += weakCharge * (data.landedFirstBlackFlash ? 0.001 : 0);
+            blackFlashChance += (float) (weakCharge * (data.landedFirstBlackFlash ? 0.001 : 0));
 
             double strongCharge = entity.getPersistentData().getDouble("cnt6");
-            if (strongCharge >= 1 && strongCharge < 2)
+
+
+            if(strongCharge>9000)
+                //Todo fix
+                blackFlashChance = 1;
+            else if (strongCharge >= 1 && strongCharge < 2)
                 blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.0125f, 0.0375f) : 0;
             else if (strongCharge >= 2 && strongCharge < 3)
                 blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.025f, 0.075f) : 0;
@@ -67,7 +78,12 @@ public class RangeAttackProcedureMixin {
                 blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.075f, 0.15f) : 0;
 
 
-            boolean blackFlash = Math.random() < blackFlashChance ? true : false;
+            //Maki fix
+            if(playerCurseTechnique==-1){blackFlashChance=-1;}
+
+
+
+            boolean blackFlash = Math.random() <= blackFlashChance;
             BlackFlash.set(blackFlash);
             blackflashable.set(blackFlash);
         }
