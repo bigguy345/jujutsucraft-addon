@@ -204,6 +204,13 @@ public class CommonEvents {
                     effect.setDuration(unstable.getDuration() / 2);
                     effect.updateClient(player);
                 }
+
+                MobEffectInstance brainDamage = player.getEffect(JujutsucraftModMobEffects.BRAIN_DAMAGE.get());
+                if (brainDamage != null) {
+                    IMobEffectInstance effect = (IMobEffectInstance) brainDamage;
+                    effect.setDuration(brainDamage.getDuration() / 2);
+                    effect.updateClient(player);
+                }
             }
 
 
