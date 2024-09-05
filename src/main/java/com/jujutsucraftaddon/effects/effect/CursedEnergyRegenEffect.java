@@ -1,13 +1,14 @@
 package com.jujutsucraftaddon.effects.effect;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
+import com.jujutsucraftaddon.effects.ImprovedMobEffect;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-public class CursedEnergyRegenEffect extends MobEffect {
+public class CursedEnergyRegenEffect extends ImprovedMobEffect {
     public CursedEnergyRegenEffect(MobEffectCategory category, int color) {
         super(category, color);
     }

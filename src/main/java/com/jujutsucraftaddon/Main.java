@@ -8,6 +8,7 @@ import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.entity.ModEntities;
 import com.jujutsucraftaddon.events.ClientEvents;
 import com.jujutsucraftaddon.events.CommonEvents;
+import com.jujutsucraftaddon.events.MobEffectEvents;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.world.entity.Entity;
@@ -54,6 +55,7 @@ public class Main {
         //Event registry
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
+        MinecraftForge.EVENT_BUS.register(new MobEffectEvents());
         MinecraftForge.EVENT_BUS.addGenericListener(Entity.class, ModCapabilities::onAttachCapabilities);
 
         MOD_EVENT_BUS.addListener(ModItems::addCreative);
