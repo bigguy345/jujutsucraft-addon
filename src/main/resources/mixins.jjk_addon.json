@@ -10,7 +10,9 @@
     "jujutsu.KeyChangeTechniqueMixin",
     "jujutsu.RangeAttackProcedureMixin",
     "jujutsu.RCTEffectTickMixin",
-    "jujutsu.RCTKeyBindPressedMixin"
+    "jujutsu.RCTKeyBindPressedMixin",
+    "mc.LivingEntityMixin",
+    "mc.MobEffectInstanceMixin"
   ],
   "injectors": {
     "defaultRequire": 1

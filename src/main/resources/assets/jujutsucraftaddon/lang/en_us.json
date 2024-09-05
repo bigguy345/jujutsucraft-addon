@@ -9,6 +9,8 @@
   "key.temp": "Example Key",
 
   "effect.jujutsucraftaddon.cursed_energy_regen": "Cursed Energy Regeneration",
-  "effect.jujutsucraftaddon.cost_reduction": "Cost Reduction"
+  "effect.jujutsucraftaddon.cost_reduction": "Cost Reduction",
+  "effect.jujutsucraftaddon.cooldown_reduction": "Cooldown Reduction"
+
 
 }
