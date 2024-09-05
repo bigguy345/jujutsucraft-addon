@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.procedures.RangeAttackProcedure;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -90,5 +91,23 @@ public class RangeAttackProcedureMixin {
             return false;
 
         return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
+    }
+
+    //To make the heal work more properly, since rn the fatigue and brain damage heal auto apply from the mod itself, Also u should add a brain dmg heal to the black flash event
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 3))
+    private static boolean removeBaseModFatigueHeal1(LivingEntity instance, MobEffect p_21196_) {
+        return true;
+    }
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 6))
+    private static boolean removeBaseModFatigueHeal2(LivingEntity instance, MobEffectInstance p_21165_) {
+        return true;
+    }
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 4))
+    private static boolean removeBaseModBrainDamageHeal1(LivingEntity instance, MobEffect p_21196_) {
+        return true;
+    }
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 7))
+    private static boolean removeBaseModBrainDamageHeal2(LivingEntity instance, MobEffectInstance p_21165_) {
+        return true;
     }
 }
