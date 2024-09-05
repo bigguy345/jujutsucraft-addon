@@ -85,10 +85,10 @@ public class RangeAttackProcedureMixin {
     }
 
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 5))
-    private static boolean blackFlashIncreasesZone(LivingEntity instance, MobEffectInstance p_21165_) {
+    private static boolean removeGivingZone(LivingEntity instance, MobEffectInstance p_21165_) {
         if (instance instanceof Player)
             return false;
-        
+
         return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
     }
 }

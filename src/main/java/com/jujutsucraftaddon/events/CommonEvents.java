@@ -8,6 +8,7 @@ import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -44,7 +45,7 @@ public class CommonEvents {
 
             if (!data.landedFirstBlackFlash)
                 data.landedFirstBlackFlash = true;
-            
+
             /////////////////////////////////////////////////
             /////////////////////////////////////////////////
             //Give or update player's Zone
@@ -148,7 +149,7 @@ public class CommonEvents {
                 zoneKnockbackMulti = 5;
                 jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.3f;
             }
-            
+
             //////////////////////////////////////////////////
             //////////////////////////////////////////////////
             //Main BF damage handling
@@ -166,7 +167,7 @@ public class CommonEvents {
             //////////////////////////////////////////////////
             //////////////////////////////////////////////////
             //Remove debuffs ,I want it so debuffRecoverChance succeeding removes all debuffs, and not just certain ones
-            
+
             if (random <= debuffRecoverChance) {
 
                 //                boolean recoverUnstable = false;
@@ -234,7 +235,6 @@ public class CommonEvents {
                 } else
                     player.addEffect(new MobEffectInstance(ModEffects.COOLDOWN_REDUCTION.get(), zone.getDuration(), zoneCooldownReductionAmplifier, false, false));
             }
-
 
 
             ///////////////////////////////////////////////////
