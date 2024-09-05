@@ -49,7 +49,7 @@ public class RangeAttackProcedureMixin {
                         blackFlashChance += 0.1f;
                         break;
                     default:
-                        blackFlashChance += ValueUtil.randomBetween(0.03f,0.06f);
+                        blackFlashChance += ValueUtil.randomBetween(0.2f,0.6f);
                         break;
                 }
             }
@@ -77,7 +77,7 @@ public class RangeAttackProcedureMixin {
         if (!blackFlash.get())
             return;
 
-        BlackFlashEvent event = new BlackFlashEvent(entity, attacked.get(), damage_sorce.get() / 8, knockback.get());
+        BlackFlashEvent event = new BlackFlashEvent((LivingEntity) entity, (LivingEntity) attacked.get(), damage_sorce.get() / 8, knockback.get());
         MinecraftForge.EVENT_BUS.post(event);
 
         damage_sorce.set(event.damage);

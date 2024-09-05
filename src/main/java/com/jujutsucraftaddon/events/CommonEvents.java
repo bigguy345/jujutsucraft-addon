@@ -1,6 +1,8 @@
 package com.jujutsucraftaddon.events;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
+import com.jujutsucraftaddon.effects.IMobEffectInstance;
+import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
@@ -47,41 +49,69 @@ public class CommonEvents {
 
             int debuffRecoverAmmount = 5;
             float damageMulti = data.blackFlashDamageMulti;
-            float zoneDamageMulti = 1f, zoneKnockbackMulti = 1f, debuffRecoverChance = 0.3f, unstableRecoverChance = 0.1f;
+            float zoneDamageMulti = 1f, zoneKnockbackMulti = 1f, costReductionChance = 0, cooldownReductionChance = 0, debuffRecoverChance = 0.3f;
+            int zoneCostReductionAmplifier = 0, zoneCooldownReductionAmplifier = 0;
             if (zone != null) {
                 switch (zone.getAmplifier()) {
                     case 0:
                         debuffRecoverAmmount = 6;
-                        debuffRecoverChance = 0.4f;
-                        zoneDamageMulti = ValueUtil.randomBetween(1, 1.25f);
+                        debuffRecoverChance = ValueUtil.randomBetween(0.75f, 1);
+                        ;
                         jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.25f;
+                        zoneDamageMulti = ValueUtil.randomBetween(1, 1.25f);
                         zoneKnockbackMulti = 5;
+
+                        costReductionChance = ValueUtil.randomBetween(0.5f, 1);
+                        cooldownReductionChance = ValueUtil.randomBetween(0.5f, 1);
+                        zoneCostReductionAmplifier = ValueUtil.randomBetween(0, 1);
+                        zoneCooldownReductionAmplifier = ValueUtil.randomBetween(0, 1);
                         break;
                     case 1:
                         debuffRecoverAmmount = 8;
-                        debuffRecoverChance = 0.6f;
-                        zoneDamageMulti = ValueUtil.randomBetween(1, 1.5f);
+                        debuffRecoverChance = ValueUtil.randomBetween(0.5f, 1);
+                        ;
                         jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.15f;
+                        zoneDamageMulti = ValueUtil.randomBetween(1, 1.5f);
                         zoneKnockbackMulti = 6;
+
+                        costReductionChance = ValueUtil.randomBetween(0.5f, 1f);
+                        cooldownReductionChance = ValueUtil.randomBetween(0.5f, 1f);
+                        zoneCostReductionAmplifier = ValueUtil.randomBetween(1, 2);
+                        zoneCooldownReductionAmplifier = ValueUtil.randomBetween(1, 2);
                         break;
                     case 2:
                         debuffRecoverAmmount = 10;
                         debuffRecoverChance = 0.8f;
-                        zoneDamageMulti = ValueUtil.randomBetween(1, 1.75f);
                         jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.1f;
+                        zoneDamageMulti = ValueUtil.randomBetween(1, 1.75f);
                         zoneKnockbackMulti = 7;
+
+                        costReductionChance = ValueUtil.randomBetween(0.4f, 0.8f);
+                        cooldownReductionChance = ValueUtil.randomBetween(0.4f, 0.8f);
+                        zoneCostReductionAmplifier = ValueUtil.randomBetween(2, 3);
+                        zoneCooldownReductionAmplifier = ValueUtil.randomBetween(2, 3);
                         break;
                     case 3:
                         debuffRecoverChance = 12;
-                        zoneDamageMulti = ValueUtil.randomBetween(1, 2f);
                         jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.05f;
+                        zoneDamageMulti = ValueUtil.randomBetween(1, 2f);
                         zoneKnockbackMulti = 8;
+
+                        costReductionChance = ValueUtil.randomBetween(0.25f, 0.75f);
+                        cooldownReductionChance = ValueUtil.randomBetween(0.25f, 0.75f);
+                        zoneCostReductionAmplifier = ValueUtil.randomBetween(3, 4);
+                        zoneCooldownReductionAmplifier = ValueUtil.randomBetween(3, 4);
                         break;
                     default:
                         debuffRecoverAmmount = 15;
                         debuffRecoverChance = 1f;
                         zoneDamageMulti = ValueUtil.randomBetween(1, 2.5f);
                         zoneKnockbackMulti = 10;
+
+                        costReductionChance = ValueUtil.randomBetween(0.1f, 0.4f);
+                        cooldownReductionChance = ValueUtil.randomBetween(0.1f, 0.4f);
+                        zoneCostReductionAmplifier = ValueUtil.randomBetween(4, 8);
+                        zoneCooldownReductionAmplifier = ValueUtil.randomBetween(4, 8);
                         break;
                 }
             } else {
@@ -96,8 +126,8 @@ public class CommonEvents {
             double random = Math.random();
 
             debuffRecoverAmmount = debuffRecoverAmmount * 20;
-            
-            
+
+
             //I want it so debuffRecoverChance succeeding removes all debuffs, and not just certain ones
             if (random <= debuffRecoverChance) {
 
@@ -124,15 +154,43 @@ public class CommonEvents {
                 // Below is a more  efficient way of checking these status effects. If the below  doesn't do what you intended with the above vars lemme know
                 MobEffectInstance fatigue = player.getEffect(JujutsucraftModMobEffects.FATIGUE.get());
                 if (fatigue != null) {
-                    player.removeEffect(JujutsucraftModMobEffects.FATIGUE.get());
-                    player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.FATIGUE.get(), (int) (fatigue.getDuration() - debuffRecoverAmmount * ValueUtil.randomBetween(1, 1.2f)), fatigue.getAmplifier(), false, true));
+                    IMobEffectInstance effect = (IMobEffectInstance) fatigue;
+                    effect.setDuration(fatigue.getDuration() / 2);
+                    effect.updateClient(player);
                 }
 
                 MobEffectInstance unstable = player.getEffect(JujutsucraftModMobEffects.UNSTABLE.get());
                 if (unstable != null) {
-                    player.removeEffect(JujutsucraftModMobEffects.UNSTABLE.get());
-                    player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.UNSTABLE.get(), (int) (unstable.getDuration() - debuffRecoverAmmount * ValueUtil.randomBetween(1, 1.2f)), unstable.getAmplifier(), false, false));
+                    IMobEffectInstance effect = (IMobEffectInstance) unstable;
+                    effect.setDuration(unstable.getDuration() / 2);
+                    effect.updateClient(player);
                 }
+            }
+
+            if (Math.random() <= costReductionChance) {
+                MobEffectInstance costReduction = player.getEffect(ModEffects.COST_REDUCTION.get());
+                if (costReduction != null) {
+                    if (costReduction.getAmplifier() < zoneCostReductionAmplifier) {
+                        IMobEffectInstance effect = (IMobEffectInstance) costReduction;
+                        effect.setAmplifier(zoneCostReductionAmplifier);
+                        effect.setDuration(zone.getDuration());
+                        effect.updateClient(player);
+                    }
+                } else
+                    player.addEffect(new MobEffectInstance(ModEffects.COST_REDUCTION.get(), zone.getDuration(), zoneCostReductionAmplifier, false, false));
+            }
+
+            if (Math.random() <= cooldownReductionChance) {
+                MobEffectInstance cooldownReduction = player.getEffect(ModEffects.COOLDOWN_REDUCTION.get());
+                if (cooldownReduction != null) {
+                    if (cooldownReduction.getAmplifier() < zoneCooldownReductionAmplifier) {
+                        IMobEffectInstance effect = (IMobEffectInstance) cooldownReduction;
+                        effect.setAmplifier(zoneCooldownReductionAmplifier);
+                        effect.setDuration(zone.getDuration());
+                        effect.updateClient(player);
+                    }
+                } else
+                    player.addEffect(new MobEffectInstance(ModEffects.COOLDOWN_REDUCTION.get(), zone.getDuration(), zoneCooldownReductionAmplifier, false, false));
             }
 
 
