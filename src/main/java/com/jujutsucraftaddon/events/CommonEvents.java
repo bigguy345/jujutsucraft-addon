@@ -8,7 +8,6 @@ import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
@@ -252,18 +251,28 @@ public class CommonEvents {
             double strongCharge = event.attacker.getPersistentData().getDouble("cnt6");
             double strongChargeKnockback = 1;
 
-            if (strongCharge >= 1 && strongCharge < 2) {
+            float knockoutChance = 1f;
+
+            if (strongCharge >= 1 && strongCharge < 3) {
                 strongChargeKnockback = 0.05f;
                 event.damage *= ValueUtil.randomBetween(1, 1.25f) / 1.3f;
-            } else if (strongCharge >= 2 && strongCharge < 3) {
-                strongChargeKnockback = 0.1f;
+            } else if (strongCharge >= 3 && strongCharge < 5) {
+                strongChargeKnockback = 0.2f;
                 event.damage *= ValueUtil.randomBetween(1.25f, 1.5f) / 1.4f;
-            } else if (strongCharge >= 3) {
+                knockoutChance = 0.25f;
+            } else if (strongCharge >= 5) {
                 strongChargeKnockback = 0.4f;
                 event.damage *= ValueUtil.randomBetween(1.5f, 2) / 1.6f;
+                knockoutChance = 0.6f;
             }
 
-            if (weakCharge >= 1 || strongCharge >= 1)
+            MobEffectInstance knockout = event.attacked.getEffect(ModEffects.KNOCKOUT_EFFECT.get());
+            if (Math.random() <= knockoutChance) {
+                if (knockout == null) {
+                    event.attacked.addEffect(new MobEffectInstance(ModEffects.KNOCKOUT_EFFECT.get(), 200, 99, false, false));
+                    event.knockback = 0;
+                }
+            } else if (weakCharge >= 1 || strongCharge >= 1)
                 event.knockback *= 1 + (zoneKnockbackMulti * weakChargeKnockback * strongChargeKnockback);
         }
     }
