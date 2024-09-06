@@ -30,18 +30,15 @@ public class RangeAttackProcedureMixin {
     private static void blackFlashChance(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "BlackFlash") LocalBooleanRef BlackFlash, @Local(name = "blackflashable") LocalBooleanRef blackflashable, @Local(name = "damage_source_player") LocalDoubleRef damage_source_player) {
         if (entity instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
+            JujutsucraftModVariables.PlayerVariables jjcData = data.getPlayerVariables();
 
-            double playerCurseTechnique = player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables()).PlayerCurseTechnique2;
+            //Maki fix
+            if (jjcData.PlayerCurseTechnique2 == -1 || BlackFlash.get()) {
+                return;
+            }
+
 
             float blackFlashChance = data.blackFlashChance == -1 ? 0.002f : data.blackFlashChance;
-
-            //Yuji Fix, extra 0.55% chance to black flash if ur yuji
-            if(playerCurseTechnique==21){blackFlashChance+=0.005f;}
-
-            //Nanami Fix, I think? ???
-            if(player.hasEffect(JujutsucraftModMobEffects.SPECIAL.get())){
-                if(player.getEffect(JujutsucraftModMobEffects.SPECIAL.get()).getAmplifier()>0){blackFlashChance+=0.007f;}}
-
             MobEffectInstance zone = player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null) {
                 switch (zone.getAmplifier()) {
@@ -57,31 +54,21 @@ public class RangeAttackProcedureMixin {
                         blackFlashChance += 0.1f;
                         break;
                     default:
-                        blackFlashChance += ValueUtil.randomBetween(0.3f,0.6f);
+                        blackFlashChance += ValueUtil.randomBetween(0.2f, 0.6f);
                         break;
                 }
             }
 
             double weakCharge = entity.getPersistentData().getDouble("cnt5");
-            blackFlashChance += (float) (weakCharge * (data.landedFirstBlackFlash ? 0.001 : 0));
+            blackFlashChance += weakCharge * (data.landedFirstBlackFlash ? 0.001 : 0);
 
             double strongCharge = entity.getPersistentData().getDouble("cnt6");
-
-
-            if(strongCharge>9000)
-                //Todo fix
-                blackFlashChance = 1;
-            else if (strongCharge >= 1 && strongCharge < 2)
+            if (strongCharge >= 1 && strongCharge < 2)
                 blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.0125f, 0.0375f) : 0;
             else if (strongCharge >= 2 && strongCharge < 3)
                 blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.025f, 0.075f) : 0;
             else if (strongCharge >= 3)
                 blackFlashChance += data.landedFirstBlackFlash ? ValueUtil.randomBetween(0.075f, 0.15f) : 0;
-
-
-            //Maki fix
-            if(playerCurseTechnique==-1){blackFlashChance=-1;}
-
 
 
             boolean blackFlash = Math.random() <= blackFlashChance;
@@ -115,14 +102,17 @@ public class RangeAttackProcedureMixin {
     private static boolean removeBaseModFatigueHeal1(LivingEntity instance, MobEffect p_21196_) {
         return true;
     }
+
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 6))
     private static boolean removeBaseModFatigueHeal2(LivingEntity instance, MobEffectInstance p_21165_) {
         return true;
     }
+
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 4))
     private static boolean removeBaseModBrainDamageHeal1(LivingEntity instance, MobEffect p_21196_) {
         return true;
     }
+
     @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 7))
     private static boolean removeBaseModBrainDamageHeal2(LivingEntity instance, MobEffectInstance p_21165_) {
         return true;
