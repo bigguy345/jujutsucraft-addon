@@ -1,6 +1,8 @@
 package com.jujutsucraftaddon.events;
 
 import com.jujutsucraftaddon.effects.ImprovedMobEffect;
+import com.jujutsucraftaddon.effects.ModEffects;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -25,5 +27,11 @@ public class MobEffectEvents {
         if (event.getEffectInstance().getEffect() instanceof ImprovedMobEffect effect) {
             effect.onInstanceRemove(event.getEntity(), event.getEffectInstance());
         }
+    }
+
+    @SubscribeEvent
+    public void onChangeTarget(LivingChangeTargetEvent event) {
+        if (event.getEntity().hasEffect(ModEffects.KNOCKOUT_EFFECT.get()))
+            event.setCanceled(true);
     }
 }
