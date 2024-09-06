@@ -4,16 +4,21 @@
   "package": "com.jujutsucraftaddon.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "gecko.GeoEntityRendererMixin",
     "jujutsu.CooldownGuiFix"
   ],
   "mixins": [
+    "jujutsu.HakariZone",
     "jujutsu.KeyChangeTechniqueMixin",
     "jujutsu.RangeAttackProcedureMixin",
     "jujutsu.RCTEffectTickMixin",
     "jujutsu.RCTKeyBindPressedMixin",
-    "jujutsu.HakariZone",
+    "mc.EntityMixin",
     "mc.LivingEntityMixin",
-    "mc.MobEffectInstanceMixin"
+    "mc.MobEffectInstanceMixin",
+    "mc.MobMixin",
+    "mc.client.MinecraftMixin",
+    "mc.client.KeyMappingMixin"
   ],
   "injectors": {
     "defaultRequire": 1

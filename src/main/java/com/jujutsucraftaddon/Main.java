@@ -77,7 +77,7 @@ public class Main {
         public static void onClientSetup(FMLClientSetupEvent event) {
             //Client only events
             MinecraftForge.EVENT_BUS.register(new ClientEvents());
-            MinecraftForge.EVENT_BUS.addListener(KeyHandler::onKeyInput);
+            MinecraftForge.EVENT_BUS.register(new KeyHandler());
 
             MOD_EVENT_BUS.addListener(KeyHandler::registerKeyMappings);
         }
