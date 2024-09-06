@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(OverlayDefaultOverlay.class)
 public class CooldownGuiFix {
-        @Redirect(method = "eventHandler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", ordinal = 3))
+        @Redirect(method = "eventHandler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", ordinal = 3, remap = true))
         private static int removeSpeed1(GuiGraphics instance, Font p_283343_, String p_281896_, int p_283569_, int p_283418_, int p_281560_, boolean p_282130_, RenderGuiEvent.Pre event) {
             Player entity = Minecraft.getInstance().player;
             int w = event.getWindow().getGuiScaledWidth();
@@ -29,7 +29,7 @@ public class CooldownGuiFix {
             return event.getGuiGraphics().drawString(Minecraft.getInstance().font, nah, w / 2 + -203, h / 2 + 95, -205, false);
 
         }
-        @Redirect(method = "eventHandler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", ordinal = 4))
+        @Redirect(method = "eventHandler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", ordinal = 4, remap = true))
         private static int removeSpeed2(GuiGraphics instance, Font p_283343_, String p_281896_, int p_283569_, int p_283418_, int p_281560_, boolean p_282130_, RenderGuiEvent.Pre event) {
             Player entity = Minecraft.getInstance().player;
             int w = event.getWindow().getGuiScaledWidth();
@@ -42,7 +42,7 @@ public class CooldownGuiFix {
             return event.getGuiGraphics().drawString(Minecraft.getInstance().font,nah, w / 2 + -208, h / 2 + 107, -205, false);
 
         }
-        @Redirect(method = "eventHandler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", ordinal = 5), remap = false)
+        @Redirect(method = "eventHandler", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;drawString(Lnet/minecraft/client/gui/Font;Ljava/lang/String;IIIZ)I", ordinal = 5, remap = true))
         private static int removeSpeed3(GuiGraphics instance, Font p_283343_, String p_281896_, int p_283569_, int p_283418_, int p_281560_, boolean p_282130_, RenderGuiEvent.Pre event) {
             Player entity = Minecraft.getInstance().player;
             int w = event.getWindow().getGuiScaledWidth();

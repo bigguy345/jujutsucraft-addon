@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = ReverseCursedTechniqueOnEffectActiveTickProcedure.class, remap = false)
 public class RCTEffectTickMixin {
 
-    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getCapability(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/minecraftforge/common/util/LazyOptional;", ordinal = 0, shift = At.Shift.BEFORE))
+    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getCapability(Lnet/minecraftforge/common/capabilities/Capability;Lnet/minecraft/core/Direction;)Lnet/minecraftforge/common/util/LazyOptional;", ordinal = 0, shift = At.Shift.BEFORE,remap = true))
     private static void decreaseRCTEnergyDrain(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "Amount") LocalDoubleRef Amount, @Local(name = "fatigue") LocalDoubleRef Fatigue) {
 
         if (entity instanceof LivingEntity ent) {

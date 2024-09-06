@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(JackpotEffectStartedappliedProcedure.class)
+@Mixin(value = JackpotEffectStartedappliedProcedure.class, remap = false)
 public class HakariZone {
-    @Redirect( method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z"))
+    @Redirect( method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", remap = true))
     private static boolean addInitialEffects(LivingEntity instance, MobEffectInstance p_21165_){
         int zoneAmpf = instance.hasEffect(JujutsucraftModMobEffects.ZONE.get()) ? instance.getEffect(JujutsucraftModMobEffects.ZONE.get()).getAmplifier() : 0;
         return instance.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), instance.getEffect(JujutsucraftModMobEffects.JACKPOT.get()).getDuration(),zoneAmpf, false, false));

@@ -4,11 +4,12 @@ import com.jujutsucraftaddon.effects.ModEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = Entity.class)
+@Mixin(value = Entity.class,remap = true)
 public class EntityMixin {
 
     @Inject(method = "turn", at = @At("HEAD"), cancellable = true)
@@ -17,4 +18,5 @@ public class EntityMixin {
         if (mob.hasEffect(ModEffects.KNOCKOUT_EFFECT.get()))
             ci.cancel();
     }
+
 }

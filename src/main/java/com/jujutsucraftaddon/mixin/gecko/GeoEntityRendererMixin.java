@@ -16,14 +16,14 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-@Mixin(value = GeoEntityRenderer.class)
+@Mixin(value = GeoEntityRenderer.class,remap = false)
 public class GeoEntityRendererMixin<T extends Entity & GeoAnimatable> extends EntityRenderer<T> {
 
     protected GeoEntityRendererMixin(EntityRendererProvider.Context p_174008_) {
         super(p_174008_);
     }
 
-    @Redirect(method = "actuallyRender(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/Entity;Lsoftware/bernie/geckolib/cache/object/BakedGeoModel;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZFIIFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;speed(F)F"))
+    @Redirect(method = "actuallyRender(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/entity/Entity;Lsoftware/bernie/geckolib/cache/object/BakedGeoModel;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/MultiBufferSource;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZFIIFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/WalkAnimationState;speed(F)F",remap = true))
     private float removeBaseModBrainDamageHeal1(WalkAnimationState instance, float partialTick, @Local(name = "livingEntity") LocalRef<LivingEntity> livingEntity) {
         LivingEntity entity = livingEntity.get();
         if (entity.hasEffect(ModEffects.KNOCKOUT_EFFECT.get()))

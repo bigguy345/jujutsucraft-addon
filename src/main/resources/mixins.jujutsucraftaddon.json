@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "gecko.GeoEntityRendererMixin",
-    "jujutsu.CooldownGuiFix"
+    "jujutsu.CooldownGuiFix",
+    "mc.client.KeyMappingMixin",
+    "mc.client.MinecraftMixin"
   ],
   "mixins": [
     "jujutsu.HakariZone",
@@ -16,12 +18,10 @@
     "mc.EntityMixin",
     "mc.LivingEntityMixin",
     "mc.MobEffectInstanceMixin",
-    "mc.MobMixin",
-    "mc.client.MinecraftMixin",
-    "mc.client.KeyMappingMixin"
+    "mc.MobMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
-  "refmap": "mixins.sky.refmap.json"
+  "refmap": "mixins.jujutsucraftaddon.refmap.json"
 }

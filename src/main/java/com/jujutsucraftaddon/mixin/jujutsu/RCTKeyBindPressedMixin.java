@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = KeyReverseCursedTechniqueOnKeyPressedProcedure.class, remap = false)
 public class RCTKeyBindPressedMixin {
 
-    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getServer()Lnet/minecraft/server/MinecraftServer;", ordinal = 1, shift = At.Shift.BEFORE))
+    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getServer()Lnet/minecraft/server/MinecraftServer;", ordinal = 1, shift = At.Shift.BEFORE,remap = true))
     private static void changeRCTStrengthWithZone(Entity entity, CallbackInfo ci, @Local(name = "level") LocalDoubleRef level) {
 
         if (entity instanceof LivingEntity ent) {

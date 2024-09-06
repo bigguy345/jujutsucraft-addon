@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = RangeAttackProcedure.class, remap = false)
 public class RangeAttackProcedureMixin {
 
-    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getBoolean(Ljava/lang/String;)Z", ordinal = 2, shift = At.Shift.BEFORE))
+    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getBoolean(Ljava/lang/String;)Z", ordinal = 2, shift = At.Shift.BEFORE, remap = true))
     private static void blackFlashChance(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "BlackFlash") LocalBooleanRef BlackFlash, @Local(name = "blackflashable") LocalBooleanRef blackflashable, @Local(name = "damage_source_player") LocalDoubleRef damage_source_player) {
         if (entity instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
@@ -89,7 +89,7 @@ public class RangeAttackProcedureMixin {
         knockback.set(event.knockback);
     }
 
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 5))
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 5, remap = true))
     private static boolean removeGivingZone(LivingEntity instance, MobEffectInstance p_21165_) {
         if (instance instanceof Player)
             return false;
@@ -98,22 +98,22 @@ public class RangeAttackProcedureMixin {
     }
 
     //To make the heal work more properly, since rn the fatigue and brain damage heal auto apply from the mod itself, Also u should add a brain dmg heal to the black flash event
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 3))
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 3, remap = true))
     private static boolean removeBaseModFatigueHeal1(LivingEntity instance, MobEffect p_21196_) {
         return true;
     }
 
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 6))
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 6, remap = true))
     private static boolean removeBaseModFatigueHeal2(LivingEntity instance, MobEffectInstance p_21165_) {
         return true;
     }
 
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 4))
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;removeEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 4, remap = true))
     private static boolean removeBaseModBrainDamageHeal1(LivingEntity instance, MobEffect p_21196_) {
         return true;
     }
 
-    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 7))
+    @Redirect(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;addEffect(Lnet/minecraft/world/effect/MobEffectInstance;)Z", ordinal = 7, remap = true))
     private static boolean removeBaseModBrainDamageHeal2(LivingEntity instance, MobEffectInstance p_21165_) {
         return true;
     }
