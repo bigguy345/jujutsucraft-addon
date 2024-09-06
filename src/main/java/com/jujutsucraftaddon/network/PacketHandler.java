@@ -4,7 +4,9 @@ import com.jujutsucraftaddon.Main;
 import com.jujutsucraftaddon.network.packet.KeyInputPacket;
 import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.network.NetworkDirection;
@@ -33,7 +35,11 @@ public class PacketHandler {
         CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
     }
 
-    public static void sendToTracking(Player player, Packet msg) {
-        CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player), msg);
+    public static void sendToTracking(Entity entity, Packet msg) {
+        CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), msg);
+    }
+
+    public static void sendToTrackingVanilla(Entity entity, net.minecraft.network.protocol.Packet packet) {
+        ((ServerChunkCache) entity.getCommandSenderWorld().getChunkSource()).broadcast(entity, packet);
     }
 }
