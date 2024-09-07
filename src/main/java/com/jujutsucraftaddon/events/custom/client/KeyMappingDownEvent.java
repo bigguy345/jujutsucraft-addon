@@ -6,11 +6,13 @@ import net.minecraftforge.eventbus.api.Event;
 public class KeyMappingDownEvent extends Event {
     
     public KeyMapping key;
-    public boolean isDown,release;
+    public boolean isDown;
+    public int clickCount;
 
-    public KeyMappingDownEvent(KeyMapping key, boolean isDown) {
+    public KeyMappingDownEvent(KeyMapping key, boolean isDown,int clickCount) {
         this.key = key;
         this.isDown = isDown;
+        this.clickCount = clickCount;
     }
 
     @Override

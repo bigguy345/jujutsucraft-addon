@@ -38,7 +38,7 @@ public class KeyHandler {
     }
 
     @SubscribeEvent
-    public void onKeyInput(InputEvent.InteractionKeyMappingTriggered event) {
+    public void onInteractionKey(InputEvent.InteractionKeyMappingTriggered event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player.hasEffect(ModEffects.KNOCKOUT_EFFECT.get())) {
             event.setCanceled(true);
@@ -47,15 +47,22 @@ public class KeyHandler {
     }
 
     @SubscribeEvent
+    public void onMouseScroll(InputEvent.MouseScrollingEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player.hasEffect(ModEffects.KNOCKOUT_EFFECT.get()))
+            event.setCanceled(true);
+    }
+
+    @SubscribeEvent
     public void onKeyMappingDown(KeyMappingDownEvent event) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null)
             return;
 
-        boolean knockoutKey = event.key == mc.options.keyUp || event.key == mc.options.keyDown || event.key == mc.options.keyLeft || event.key == mc.options.keyRight || event.key == mc.options.keyShift || event.key == mc.options.keyJump;
+        KeyMapping key = event.key;
+        boolean knockoutKey = key.getCategory() == "key.categories.movement" || (key.getCategory() == "key.categories.inventory" && key.getName() != "key.inventory");
         if (knockoutKey && mc.player.hasEffect(ModEffects.KNOCKOUT_EFFECT.get())) {
             event.isDown = false;
-            event.release = true;
             event.setCanceled(true);
         }
     }
