@@ -3,6 +3,7 @@ package com.jujutsucraftaddon.effects.effect;
 import com.jujutsucraftaddon.effects.ImprovedMobEffect;
 import com.jujutsucraftaddon.utility.Utility;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,7 +29,7 @@ public class KnockoutEffect extends ImprovedMobEffect {
             monster.setTarget(null);
 
         if (entity instanceof ServerPlayer player) {
-            Utility.displayTitle(player, "{\"text\":\"Knocked Out!\",\"color\":\"dark_red\",\"bold\":true}}", "", 70, 10, 10);
+            Utility.displayTitle(player, "{\"text\":\"" + Component.translatable("title.jujutsucraftaddon.knocked_out").getString() + "\",\"color\":\"dark_red\",\"bold\":true}}", "", 70, 10, 10);
             player.playNotifySound(SoundEvents.WITHER_DEATH, SoundSource.PLAYERS, 1.0f, 1.0f);
         }
         super.onInstancedAdded(entity, instance);
