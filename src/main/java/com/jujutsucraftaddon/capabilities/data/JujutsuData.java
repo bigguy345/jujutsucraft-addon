@@ -7,6 +7,8 @@ import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -16,6 +18,7 @@ public class JujutsuData {
     public Player player;
     public float blackFlashChance = -1, blackFlashDamageMulti = 4;
     public boolean landedFirstBlackFlash;
+    public JujutsucraftModVariables.PlayerVariables data;
 
     public JujutsuData() {
     }
@@ -39,15 +42,25 @@ public class JujutsuData {
         landedFirstBlackFlash = nbt.getBoolean("landedFirstBlackFlash");
     }
 
+    public boolean tamedMahoraga(boolean isNotSummoned) {
+        if (player instanceof ServerPlayer player)
+            return data.PlayerCurseTechnique == 6 && player.getPersistentData().getDouble("TenShadowsTechnique14") > (isNotSummoned ? 0 : -2) && player.getAdvancements().getOrStartProgress(player.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsucraft:skill_mahoraga"))).isDone();
+
+        return false;
+    }
+
     public static JujutsuData get(Player player) {
         return player.getCapability(ModCapabilities.PLAYER_JUJUTSU_DATA, (Direction) null).orElse(new JujutsuData(player));
     }
 
     public JujutsucraftModVariables.PlayerVariables getPlayerVariables() {
-        return player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables());
+        return data = player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables());
     }
 
     public void syncTracking() {
+        if (data == null)
+            data = player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables());
+
         PacketHandler.sendToTracking(player, new SyncJujutsuData(this, player.getId()));
     }
 
