@@ -44,7 +44,7 @@ public class JujutsuData {
 
     public boolean tamedMahoraga(boolean isNotSummoned) {
         if (player instanceof ServerPlayer player)
-            return data.PlayerCurseTechnique == 6 && player.getPersistentData().getDouble("TenShadowsTechnique14") > (isNotSummoned ? 0 : -2) && player.getAdvancements().getOrStartProgress(player.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsucraft:skill_mahoraga"))).isDone();
+            return data.PlayerCurseTechnique == 6 && player.getPersistentData().getDouble("TenShadowsTechnique14") > (isNotSummoned ? -1 : -2) && player.getAdvancements().getOrStartProgress(player.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsucraft:skill_mahoraga"))).isDone();
 
         return false;
     }
