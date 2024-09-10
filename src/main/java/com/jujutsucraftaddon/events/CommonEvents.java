@@ -73,7 +73,7 @@ public class CommonEvents {
                 byte brokeBreakStage = (byte) (Math.floor(shatterPercent * 10 - 1));
 
                 if (brokeBreakStage > -1 && brokeBreakStage != prevBreakStage) {
-                    BarrierBreakProgressData.setProgress(caster, toBreak, shatterPercent < 1 ? brokeBreakStage : -1);
+                    BarrierBreakProgressData.setProgress(caster, toBreak, brokeBreakStage);
                     for (int i = 0; i < (brokeBreakStage == 9 ? 0 : (brokeBreakStage + 1) * 4); i++)
                         world.playSound(null, toBreak, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.glass.break")), SoundSource.PLAYERS, ValueUtil.lerp(0.3f, 1f, shatterPercent), 1F);
                 }

@@ -1,6 +1,7 @@
 package com.jujutsucraftaddon.client.render;
 
 import com.jujutsucraftaddon.network.packet.BarrierBreakProgessPacket;
+import com.jujutsucraftaddon.utility.JujuUtil;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -33,7 +34,7 @@ public class RenderEvents {
             BlockPos pos = entry.getKey();
             byte progress = entry.getValue();
             BlockState blockstate = mc.level.getBlockState(pos);
-            if (blockstate.isAir() || progress < 0 || progress > 9) {
+            if (blockstate.isAir() || progress < 0 || progress > 9 || !JujuUtil.isBarrier(mc.level, pos)) {
                 iterator.remove();
                 continue;
             }
