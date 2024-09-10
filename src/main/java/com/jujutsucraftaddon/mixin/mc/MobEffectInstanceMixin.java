@@ -29,21 +29,24 @@ public class MobEffectInstanceMixin implements IMobEffectInstance {
 
     @Unique
     @Override
-    public void setDuration(int duration) {
+    public IMobEffectInstance setDuration(int duration) {
         this.duration = duration;
+        return this;
     }
 
     @Unique
     @Override
-    public void setAmplifier(int duration) {
+    public IMobEffectInstance setAmplifier(int duration) {
         this.amplifier = duration;
+        return this;
     }
 
     @Unique
     @Override
-    public void updateClient(LivingEntity entity) {
+    public IMobEffectInstance updateClient(LivingEntity entity) {
         if (entity instanceof ServerPlayer player)
             player.connection.send(new ClientboundUpdateMobEffectPacket(player.getId(), (MobEffectInstance) (Object) this));
+        return this;
     }
 
     @Inject(method = "applyEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffect;applyEffectTick(Lnet/minecraft/world/entity/LivingEntity;I)V", shift = At.Shift.AFTER))
