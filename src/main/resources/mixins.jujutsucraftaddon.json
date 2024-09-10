@@ -6,15 +6,22 @@
   "client": [
     "gecko.GeoEntityRendererMixin",
     "jujutsu.CooldownGuiFix",
+    "mc.client.AbstractContainerScreenMixin",
     "mc.client.KeyMappingMixin",
     "mc.client.MinecraftMixin"
   ],
   "mixins": [
+    "jujutsu.AttackStrongProcedureMixin",
+    "jujutsu.AttackWeakProcedureMixin",
+    "jujutsu.BlasterAwayProcedureMixin",
     "jujutsu.HakariZone",
     "jujutsu.KeyChangeTechniqueMixin",
     "jujutsu.RangeAttackProcedureMixin",
     "jujutsu.RCTEffectTickMixin",
     "jujutsu.RCTKeyBindPressedMixin",
+    "jujutsu.domain.DomainExpansionBattleProcedure",
+    "jujutsu.domain.DomainExpansionEntityProcedure",
+    "jujutsu.domain.DomainExpansionExpiresMixin",
     "mc.EntityMixin",
     "mc.LivingEntityMixin",
     "mc.MobEffectInstanceMixin",

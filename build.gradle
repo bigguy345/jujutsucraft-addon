@@ -164,7 +164,7 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-    
+
     // Gecko 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${'4.4.2'}")
     implementation("com.eliotlash.mclib:mclib:20")
@@ -172,7 +172,7 @@ dependencies {
     // jjk
     implementation fg.deobf('blank:JujutsuCraft-ver40-forge-1.20.1:40')
     implementation fg.deobf('blank:player-animation-lib-forge:1.0.2-rc1+1.20')
- //   implementation fg.deobf('blank:JujutsuCraftGT2.ver39.1:2')
+    //   implementation fg.deobf('blank:JujutsuCraftGT2.ver39.1:2')
     implementation fg.deobf('blank:RPG-HUD:3.10')
 
 
