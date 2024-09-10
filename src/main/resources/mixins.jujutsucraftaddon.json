@@ -6,7 +6,6 @@
   "client": [
     "gecko.GeoEntityRendererMixin",
     "jujutsu.CooldownGuiFix",
-    "mc.client.AbstractContainerScreenMixin",
     "mc.client.KeyMappingMixin",
     "mc.client.MinecraftMixin"
   ],
