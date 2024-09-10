@@ -1,0 +1,10 @@
+{
+  "domain_shatter": {
+    "sounds": [
+      {
+        "name": "jujutsucraftaddon:domain_shatter",
+        "stream": false
+      }
+    ]
+  }
+}
