@@ -56,27 +56,37 @@ public class CommonEvents {
                 float casterHealth = caster.getHealth() * (playerCaster ? 10 : 1), casterMaxHealth = caster.getMaxHealth() * (playerCaster ? 10 : 1);
                 boolean insideDomain = JujuUtil.isWithinDomain(caster, entity);
 
-                //Damage to do as a percent of max health to break barrier. If enemy is at full health, it's 25% of that health to be done as damage to barrier block until it breaks
+                //Damage to do as a percent of max health to break barrier. If enemy is at full health, it's 25% of that health to be done as barrierdamage to barrier block until it breaks
                 //Decreases as enemy health drops.
                 float damToDoInHealthPercent = Math.min(casterMaxHealth / 1000 * casterHealth / casterMaxHealth, 0.9f);
-                float damAsPercOfMaxHealth = effectiveDamage / casterMaxHealth * ValueUtil.clamp(strongCharge, 1, 3);
+                float damAsPercOfMaxHealth = effectiveDamage * ValueUtil.clamp(strongCharge, 1, 3) / casterMaxHealth;
+                //                if (!insideDomain)
+                //                    damAsPercOfMaxHealth *= ValueUtil.lerp(1, 1.75f, 1 - (damAsPercOfMaxHealth * 4));
+                //                else
                 if (insideDomain)
-                    damAsPercOfMaxHealth *= 0.25f;
+                    damAsPercOfMaxHealth = Math.min(damAsPercOfMaxHealth * 0.25f, 0.05f);
 
                 CompoundTag blockData = barrierEntity.getPersistentData();
                 float newShatter = blockData.getFloat("shatter") + damAsPercOfMaxHealth;
                 blockData.putFloat("shatter", newShatter);
 
 
-                float shatterPercent = Math.min(newShatter / damToDoInHealthPercent, 1);
+                float shatterPercent = newShatter / damToDoInHealthPercent;
+                byte newBreakStage = BarrierBreakProgressData.bytify(shatterPercent);
                 byte prevBreakStage = BarrierBreakProgressData.getProgress(caster.getPersistentData(), toBreak);
-                byte brokeBreakStage = (byte) (Math.floor(shatterPercent * 10 - 1));
+                if (prevBreakStage != newBreakStage)
+                    BarrierBreakProgressData.setProgress(caster, toBreak, newBreakStage);
 
-                if (brokeBreakStage > -1 && brokeBreakStage != prevBreakStage) {
-                    BarrierBreakProgressData.setProgress(caster, toBreak, brokeBreakStage);
-                    for (int i = 0; i < (brokeBreakStage == 9 ? 0 : (brokeBreakStage + 1) * 4); i++)
+                float radius = 0;
+                //Blocks surrounding toBreak
+                if (newBreakStage > -1 && newBreakStage != prevBreakStage) {
+                    float damage = damAsPercOfMaxHealth * (insideDomain ? 1 : 1);
+                    radius = Math.min(newBreakStage, ValueUtil.lerp(0, 10, damage * 4));
+                    BarrierBreakProgressData.setSurroundingProgress(caster, damage, damToDoInHealthPercent, toBreak, newBreakStage, Math.round(radius));
+                    for (int i = 0; i < (newBreakStage == 9 ? 0 : (newBreakStage + 1) * 4); i++)
                         world.playSound(null, toBreak, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.glass.break")), SoundSource.PLAYERS, ValueUtil.lerp(0.3f, 1f, shatterPercent), 1F);
                 }
+
 
                 ////////////////////////////////////////////////////////////////
                 ////////////////////////////////////////////////////////////////
@@ -101,21 +111,35 @@ public class CommonEvents {
                     else if (damToDoInHealthPercent > 0.15)
                         shatterSize = 0.09f;
 
-                    int radius = (int) (Math.max(ValueUtil.clamp(strongCharge, 1, 5) * effectiveDamage * shatterSize * 1.4f, 2));
+                    if (playerCaster)
+                        shatterSize *= 5;
+
+                    if (radius == 0)
+                        radius = (int) (ValueUtil.clamp(strongCharge, 1, 5) * effectiveDamage * shatterSize * 1.4f);
+                    else
+                        radius -= 1;
+                    radius = Math.max(radius, 2);
+
+                    //Makes it so if u powerful enough to completely shatter domain, you have the option to
+                    if (entity.isShiftKeyDown())
+                        radius = Math.min(radius, 6);
+
+                    //Makes it so max shatter radius is 5 inside domain
                     if (insideDomain)
-                        radius = Math.max(radius / 4, 2);
+                        radius = ValueUtil.clamp(radius, 2, 5);
+
 
                     //Breaks the blocks & replaces barrier blocks with what they actually were
-                    BlockUtil.doMeleeExplosionDomainBarrier(entity, toBreak, radius);
+                    BlockUtil.doMeleeExplosionDomainBarrier(entity, toBreak, Math.round(radius));
 
                     //Decrease remaining domain time, the bigger the hole the higher the shave.
-                    //If hole big enough, completely shatter domain instead
+                    //If hole big enough (radius 10+), completely shatter domain instead
                     MobEffectInstance domain = caster.getEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get());
                     if (domain != null) {
                         if (radius >= 10)
                             caster.removeEffect(domain.getEffect());
                         else {
-                            int secondsToShave = Math.max(radius * 4, 10);
+                            int secondsToShave = Math.max(Math.round(radius) * 4, 10);
                             ((IMobEffectInstance) domain).setDuration(domain.getDuration() - secondsToShave * 20).updateClient(caster);
                         }
                     }
@@ -143,10 +167,6 @@ public class CommonEvents {
 
         if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();
-
-        if (player.tickCount % 100 == 0) {
-            BarrierBreakProgressData.sendProgressToTracking(player);
-        }
     }
 
     @SubscribeEvent
@@ -159,7 +179,7 @@ public class CommonEvents {
     @SubscribeEvent
     public void onEntityTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.tickCount == 5 && entity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()))
+        if (entity.tickCount % 40 == 0 && entity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()))
             BarrierBreakProgressData.sendProgressToTracking(entity);
     }
 
