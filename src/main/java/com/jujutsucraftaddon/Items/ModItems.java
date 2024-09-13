@@ -21,10 +21,12 @@ public class ModItems {
 
     public static final RegistryObject<Item> SAPPHIRE = ITEMS.register("sapphire", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RAW_SAPPHIRE = ITEMS.register("raw_sapphire", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DOMAIN_EXPANSION_STICK = ITEMS.register("domain_expansion_stick", () -> new DomainExpansionStickItem(new Item.Properties()));
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static final RegistryObject<CreativeModeTab> ITEMS_TAB = CREATIVE_MODE_TABS.register("items_tab", () -> CreativeModeTab.builder().withTabsBefore(CreativeModeTabs.COMBAT).title(Component.translatable("creativetab.jujutsucraftaddon_tab")).icon(() -> Items.TNT.getDefaultInstance()).displayItems((parameters, output) -> {
         output.accept(SAPPHIRE_BLOCK_ITEM.get());
+        output.accept(DOMAIN_EXPANSION_STICK.get());
     }).build());
 
     public static void registerAllItems(IEventBus eventBus) {
