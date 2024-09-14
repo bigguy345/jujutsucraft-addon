@@ -33,13 +33,12 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class CommonEvents {
     public static long LAST_BARRIER_BREAK;
 
-    public static void domainBlockBreak(LivingEntity entity) {
+    public static void domainBlockBreak(LivingEntity entity, BlockPos toBreak) {
         if (System.currentTimeMillis() - LAST_BARRIER_BREAK < 100)
             return;
 
         ServerLevel world = (ServerLevel) entity.level();
         CompoundTag entityData = entity.getPersistentData();
-        BlockPos toBreak = BlockPos.containing(entityData.getDouble("x_pos"), entityData.getDouble("y_pos"), entityData.getDouble("z_pos"));
 
         if (JujuUtil.isBarrier(world, toBreak)) {
             BlockEntity barrierEntity = world.getBlockEntity(toBreak);
@@ -60,9 +59,6 @@ public class CommonEvents {
                 //Decreases as enemy health drops.
                 float damToDoInHealthPercent = Math.min(casterMaxHealth / 1000 * casterHealth / casterMaxHealth, 0.9f);
                 float damAsPercOfMaxHealth = effectiveDamage * ValueUtil.clamp(strongCharge, 1, 3) / casterMaxHealth;
-                //                if (!insideDomain)
-                //                    damAsPercOfMaxHealth *= ValueUtil.lerp(1, 1.75f, 1 - (damAsPercOfMaxHealth * 4));
-                //                else
                 if (insideDomain)
                     damAsPercOfMaxHealth = Math.min(damAsPercOfMaxHealth * 0.25f, 0.05f);
 
@@ -420,7 +416,7 @@ public class CommonEvents {
             MobEffectInstance knockout = event.attacked.getEffect(ModEffects.KNOCKOUT_EFFECT.get());
             if (Math.random() <= knockoutChance) {
                 if (knockout == null) {
-                    event.attacked.addEffect(new MobEffectInstance(ModEffects.KNOCKOUT_EFFECT.get(), 200, 99, false, false));
+                    event.attacked.addEffect(new MobEffectInstance(ModEffects.KNOCKOUT_EFFECT.get(), 850, 99, false, false));
                     event.knockback = 0;
                 }
             } else if (weakCharge >= 1 || strongCharge >= 1)
