@@ -15,7 +15,8 @@
   "effect.jujutsucraftaddon.cooldown_reduction": "Cooldown Reduction",
   "effect.jujutsucraftaddon.knockout_effect": "Knocked Out",
   "title.jujutsucraftaddon.knocked_out": "Knocked Out!",
-  "message.jujutsucraftaddon.knocked_out": "Unable to move while knocked out!"
+  "message.jujutsucraftaddon.knocked_out": "Unable to move while knocked out!",
 
-
+  "advancements.reverse_cursed_technique_others.title": "Reverse Cursed Technique Lv3",
+  "advancements.reverse_cursed_technique_others.descr": "Aim at an other entity within 5 blocks to heal it (ADDON)"
 }

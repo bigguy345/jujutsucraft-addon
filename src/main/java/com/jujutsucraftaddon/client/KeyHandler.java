@@ -1,14 +1,21 @@
 package com.jujutsucraftaddon.client;
 
+import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.events.custom.client.KeyMappingDownEvent;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.KeyInputPacket;
+import com.jujutsucraftaddon.network.packet.ReversedCTPacket;
+import com.jujutsucraftaddon.utility.Utility;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.mcreator.jujutsucraft.init.JujutsucraftModKeyMappings;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -34,6 +41,32 @@ public class KeyHandler {
         //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
         if (EXAMPLE_KEY.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_PRESS) {
             PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
+        }
+    }
+
+    @SubscribeEvent
+    public void onKeyTick(TickEvent.ClientTickEvent event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.screen != null)
+            return;
+
+        KeyMapping rctKey = JujutsucraftModKeyMappings.KEY_REVERSE_CURSED_TECHNIQUE;
+        rctKey.setDown(InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), rctKey.getKey().getValue()));
+        JujutsuData data = JujutsuData.get(mc.player);
+        boolean stopOtherRCT = false;
+        if (rctKey.isDown() && data.canHealOthers) {
+            //Fetches the entity looked at
+            Entity toHeal = Utility.raytraceEntity(mc.player, 5);
+            if (toHeal != null && toHeal instanceof LivingEntity && data.data.PlayerCursePower >= 10)
+                PacketHandler.sendToServer(new ReversedCTPacket(toHeal.getId()));
+            else if (data.toHealID != -1)
+                stopOtherRCT = true;
+        } else if (data.toHealID != -1)
+            stopOtherRCT = true;
+
+        if (stopOtherRCT) {
+            PacketHandler.sendToServer(new ReversedCTPacket(-1));
+            rctKey.setDown(false);
         }
     }
 

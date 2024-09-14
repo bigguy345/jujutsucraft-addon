@@ -3,6 +3,7 @@ package com.jujutsucraftaddon.network;
 import com.jujutsucraftaddon.Main;
 import com.jujutsucraftaddon.network.packet.BarrierBreakProgessPacket;
 import com.jujutsucraftaddon.network.packet.KeyInputPacket;
+import com.jujutsucraftaddon.network.packet.ReversedCTPacket;
 import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
@@ -22,6 +23,9 @@ public class PacketHandler {
     public static void init(FMLCommonSetupEvent event) {
         int id = 0;
         CHANNEL.messageBuilder(KeyInputPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(KeyInputPacket::encode).decoder(KeyInputPacket::new).consumerMainThread(KeyInputPacket::handle).add();
+        CHANNEL.messageBuilder(ReversedCTPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(ReversedCTPacket::encode).decoder(ReversedCTPacket::new).consumerMainThread(ReversedCTPacket::handle).add();
+
+
         CHANNEL.messageBuilder(SyncJujutsuData.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncJujutsuData::encode).decoder(SyncJujutsuData::new).consumerMainThread(SyncJujutsuData::handle).add();
         CHANNEL.messageBuilder(BarrierBreakProgessPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(BarrierBreakProgessPacket::encode).decoder(BarrierBreakProgessPacket::new).consumerMainThread(BarrierBreakProgessPacket::handle).add();
     }

@@ -1,14 +1,19 @@
 package com.jujutsucraftaddon.capabilities.data;
 
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
+import com.jujutsucraftaddon.effects.IMobEffectInstance;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
+import com.jujutsucraftaddon.utility.AdvancementUtil;
+import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -17,8 +22,10 @@ import net.minecraftforge.common.util.LazyOptional;
 public class JujutsuData {
     public Player player;
     public float blackFlashChance = -1, blackFlashDamageMulti = 4;
-    public boolean landedFirstBlackFlash;
+    public boolean landedFirstBlackFlash, canHealOthers;
+    public int toHealID = -1;
     public JujutsucraftModVariables.PlayerVariables data;
+    public Levels levels = new Levels(this);
 
     public JujutsuData() {
     }
@@ -32,6 +39,13 @@ public class JujutsuData {
         nbt.putFloat("blackFlashChance", blackFlashChance);
         nbt.putFloat("blackFlashMulti", blackFlashDamageMulti);
         nbt.putBoolean("landedFirstBlackFlash", landedFirstBlackFlash);
+
+        if (!player.level().isClientSide())
+            canHealOthers = AdvancementUtil.isDone((ServerPlayer) player, "jujutsucraftaddon:rct_others");
+        nbt.putBoolean("canHealOthers", canHealOthers);
+        nbt.putInt("toHealID", toHealID);
+        nbt.put("levels", levels.writeNBT());
+
         return nbt;
     }
 
@@ -40,6 +54,9 @@ public class JujutsuData {
         blackFlashChance = nbt.getFloat("blackFlashChance");
         blackFlashDamageMulti = nbt.getFloat("blackFlashMulti");
         landedFirstBlackFlash = nbt.getBoolean("landedFirstBlackFlash");
+        canHealOthers = nbt.getBoolean("canHealOthers");
+        toHealID = nbt.getInt("toHealID");
+        levels.readNBT(tag);
     }
 
     public boolean tamedMahoraga(boolean isNotSummoned) {
@@ -47,6 +64,12 @@ public class JujutsuData {
             return data.PlayerCurseTechnique == 6 && player.getPersistentData().getDouble("TenShadowsTechnique14") > (isNotSummoned ? -1 : -2) && player.getAdvancements().getOrStartProgress(player.server.getAdvancements().getAdvancement(new ResourceLocation("jujutsucraft:skill_mahoraga"))).isDone();
 
         return false;
+    }
+
+    public Entity getHealingEntity() {
+        if (toHealID == -1)
+            return null;
+        return player.level().getEntity(toHealID);
     }
 
     public static JujutsuData get(Player player) {
@@ -87,6 +110,72 @@ public class JujutsuData {
         @Override
         public void deserializeNBT(Tag nbt) {
             data.readNBT(nbt);
+        }
+    }
+
+    public static class Levels {
+        public static float MAX_RCT_LEVEL = 200;
+        public JujutsuData parent;
+        private float RCT;
+
+        public Levels(JujutsuData parent) {
+            this.parent = parent;
+        }
+
+        public float getFatigue() {
+            float fatigue = 0;
+
+            MobEffectInstance effect = parent.player.getEffect(JujutsucraftModMobEffects.FATIGUE.get());
+            if (effect != null) {
+                fatigue = effect.getDuration();
+            }
+
+            return 1 + Math.min(Math.max(fatigue, 0) / 600, 10) * 0.4f;
+        }
+
+        public void incrementRCTLevel(float amount) {
+            RCT = Math.min(RCT + amount, MAX_RCT_LEVEL);
+            //Every 10 levels, execute once
+            if (Math.round(RCT) % 10 == 0) {
+                float chance = RCT < 0.5f ? 0.2f : RCT;
+                if (Math.random() <= Math.min(chance, 0.5f)) {
+                    AdvancementUtil.grantAdvancement((ServerPlayer) parent.player, "jujutsucraftaddon:rct_others");
+                    parent.canHealOthers = true;
+                }
+                RCT += 0.5f;
+            }
+        }
+
+        public void incrementFatigue(int ticks) {
+            MobEffectInstance fatigue = parent.player.getEffect(JujutsucraftModMobEffects.FATIGUE.get());
+            if (fatigue != null)
+                ((IMobEffectInstance) fatigue).setDuration(Math.min(fatigue.getDuration() + ticks, 6000)).updateClient(parent.player);
+            else
+                parent.player.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.FATIGUE.get(), ticks, 0, false, false));
+        }
+
+        public int getRCTAmplifier() {
+            int zoneAmp = 0;
+            MobEffectInstance zone = parent.player.getEffect(JujutsucraftModMobEffects.ZONE.get());
+            if (zone != null)
+                zoneAmp = (int) (zone.getAmplifier() * 1.5f);
+
+            return (int) Math.max(RCT / 5f, 20) + zoneAmp;
+        }
+
+        public float getRCTLevel() {
+            return RCT;
+        }
+
+        public Tag writeNBT() {
+            CompoundTag levels = new CompoundTag();
+            levels.putFloat("rctLevel", RCT);
+            return levels;
+        }
+
+        public void readNBT(Tag tag) {
+            CompoundTag nbt = ((CompoundTag) tag).getCompound("levels");
+            RCT = nbt.getFloat("rctLevel");
         }
     }
 }
