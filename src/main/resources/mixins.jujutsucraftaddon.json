@@ -10,9 +10,10 @@
     "mc.client.MinecraftMixin"
   ],
   "mixins": [
-    "jujutsu.AttackStrongProcedureMixin",
-    "jujutsu.AttackWeakProcedureMixin",
-    "jujutsu.BlasterAwayProcedureMixin",
+    "jujutsu.attacks.AttackStrongProcedureMixin",
+    "jujutsu.attacks.AttackWeakProcedureMixin",
+    "jujutsu.attacks.AttackStrongSwordProcedureMixin",
+    "jujutsu.attacks.AttackWeakSwordProcedureMixin",
     "jujutsu.HakariZone",
     "jujutsu.KeyChangeTechniqueMixin",
     "jujutsu.RangeAttackProcedureMixin",
