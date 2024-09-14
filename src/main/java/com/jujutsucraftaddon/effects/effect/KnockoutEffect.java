@@ -37,9 +37,6 @@ public class KnockoutEffect extends ImprovedMobEffect {
         if (entity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()))
             entity.removeEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get());
 
-        if (entity instanceof Monster monster)
-            monster.setTarget(null);
-
         ItemStack helmet = entity.getItemBySlot(EquipmentSlot.HEAD);
         boolean wearingWheel = helmet.getItem() == JujutsucraftModItems.MAHORAGA_WHEEL_HELMET.get();
 
