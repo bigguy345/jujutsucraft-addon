@@ -37,6 +37,7 @@ public class KnockoutEffect extends ImprovedMobEffect {
         if (entity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()))
             entity.removeEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get());
 
+        entity.setShiftKeyDown(false);
         ItemStack helmet = entity.getItemBySlot(EquipmentSlot.HEAD);
         boolean wearingWheel = helmet.getItem() == JujutsucraftModItems.MAHORAGA_WHEEL_HELMET.get();
 
@@ -46,6 +47,7 @@ public class KnockoutEffect extends ImprovedMobEffect {
             player.displayClientMessage(Component.translatable("message.jujutsucraftaddon.knocked_out").withStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xFF0000)).withBold(true)), false);
 
             if (JujutsuData.get(player).tamedMahoraga(true) && wearingWheel) {
+                entity.getPersistentData().putDouble("cnt4", 0);
                 SummonMahoragaProcedure.execute(entity.level(), entity.getX(), entity.getY(), entity.getZ(), entity);
             }
         } else if (wearingWheel && entity.getPersistentData().getDouble("TenShadowsTechnique14") > 0) {
