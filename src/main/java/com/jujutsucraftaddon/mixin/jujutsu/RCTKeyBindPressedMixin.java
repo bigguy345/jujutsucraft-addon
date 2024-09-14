@@ -1,5 +1,6 @@
 package com.jujutsucraftaddon.mixin.jujutsu;
 
+import com.jujutsucraftaddon.effects.ModEffects;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
@@ -15,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = KeyReverseCursedTechniqueOnKeyPressedProcedure.class, remap = false)
 public class RCTKeyBindPressedMixin {
 
-    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getServer()Lnet/minecraft/server/MinecraftServer;", ordinal = 1, shift = At.Shift.BEFORE,remap = true))
+    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getServer()Lnet/minecraft/server/MinecraftServer;", ordinal = 1, shift = At.Shift.BEFORE, remap = true))
     private static void changeRCTStrengthWithZone(Entity entity, CallbackInfo ci, @Local(name = "level") LocalDoubleRef level) {
 
         if (entity instanceof LivingEntity ent) {
@@ -34,6 +35,15 @@ public class RCTKeyBindPressedMixin {
                 else if (amplifier == 4)
                     level.set(16);
             }
+        }
+    }
+
+    @Inject(method = "execute", at = @At("HEAD"), cancellable = true)
+    private static void disableRCTonKO(Entity entity, CallbackInfo ci) {
+        if (entity instanceof LivingEntity ent) {
+            MobEffectInstance ko = ent.getEffect(ModEffects.KNOCKOUT_EFFECT.get());
+            if (ko != null)
+                ci.cancel();
         }
     }
 }
