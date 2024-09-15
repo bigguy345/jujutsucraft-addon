@@ -16,11 +16,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Abilities;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -152,14 +154,39 @@ public class CommonEvents {
     public void onPlayerTick(TickEvent.PlayerTickEvent event) {
         Player player = event.player;
         Abilities abilities = player.getAbilities();
-        if (!abilities.mayfly) {
-            abilities.mayfly = true;
-            abilities.setFlyingSpeed(0.1f);
-        }
+        //        if (!abilities.mayfly) {
+        //            abilities.mayfly = true;
+        //            abilities.setFlyingSpeed(0.1f);
+        //        }
+
 
         //If this event is firing on the client side, cancel it. Ensures everything after this line fires only on server side
         if (event.side == LogicalSide.CLIENT)
             return;
+
+        JujutsuData data = JujutsuData.get(player);
+        boolean disableFlight = false;
+        if (((ServerPlayer) player).gameMode.getGameModeForPlayer() == GameType.SURVIVAL) {
+            if (player.getPersistentData().getBoolean("infinity")) {
+                if (abilities.flying && player.tickCount % 20 == 0)
+                    data.data.PlayerCursePowerChange -= 10;
+
+                if (data.data.PlayerCursePower > 20) {
+                    if (!abilities.mayfly) {
+                        abilities.mayfly = true;
+                        player.onUpdateAbilities();
+                    }
+                } else if (abilities.mayfly)
+                    disableFlight = true;
+            } else if (abilities.mayfly)
+                disableFlight = true;
+
+            if (disableFlight) {
+                abilities.mayfly = false;
+                abilities.flying = false;
+                player.onUpdateAbilities();
+            }
+        }
 
         if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();

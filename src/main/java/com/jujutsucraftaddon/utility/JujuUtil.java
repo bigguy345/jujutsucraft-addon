@@ -44,6 +44,11 @@ public class JujuUtil {
         return null;
     }
 
+    public static void breakInfinity(LivingEntity gojo, int durationTicks) {
+        gojo.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.UNSTABLE.get(), durationTicks + 10, 0, false, false));
+        gojo.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.CANCEL_CURSED_TECHNIQUE.get(), durationTicks, 0, false, false));
+    }
+
     public static DamageSource getCurseDamageSource(LivingEntity entity) {
         return new DamageSource(entity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation("jujutsucraft:damage_curse"))), entity);
     }
