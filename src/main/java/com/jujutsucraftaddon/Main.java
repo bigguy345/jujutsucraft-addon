@@ -50,14 +50,14 @@ public class Main {
         ModEffects.registerAllEffects(MOD_EVENT_BUS);
         ModSounds.SOUND_EVENTS.register(MOD_EVENT_BUS);
         GeckoLib.initialize();
+
+        ////////////////////////////////
+        //Mod's Config registry
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC, "jujutsucraft_addon.toml");
     }
 
     //Commons means both client & server.
     private void commonSetup(final FMLCommonSetupEvent event) {
-        ////////////////////////////////
-        //Mod's Config registry
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-
         ////////////////////////////////
         //Event registry
         MinecraftForge.EVENT_BUS.register(this);
