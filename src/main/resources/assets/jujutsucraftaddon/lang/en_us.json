@@ -8,7 +8,7 @@
   "creativetab.jujutsucraftaddon_tab": "Jujutsu Craft Addon",
   
   "key.category.jujutsucraftaddon": "Jujutsu Craft Addon",
-  "key.temp": "Example Key",
+  "key.second_fn": "2nd FN",
 
   "effect.jujutsucraftaddon.cursed_energy_regen": "Cursed Energy Regeneration",
   "effect.jujutsucraftaddon.cost_reduction": "Cost Reduction",
@@ -18,5 +18,5 @@
   "message.jujutsucraftaddon.knocked_out": "Unable to move while knocked out!",
 
   "advancements.reverse_cursed_technique_others.title": "Reverse Cursed Technique Lv3",
-  "advancements.reverse_cursed_technique_others.descr": "Aim at an other entity within 5 blocks to heal it (ADDON)"
+  "advancements.reverse_cursed_technique_others.descr": "Aim at an other entity within 5 blocks to heal it (ADDON: Hold 2nd FN + RCT Key)"
 }
