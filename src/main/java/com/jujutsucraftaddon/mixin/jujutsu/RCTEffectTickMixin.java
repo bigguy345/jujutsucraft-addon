@@ -1,5 +1,6 @@
 package com.jujutsucraftaddon.mixin.jujutsu;
 
+import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -65,7 +66,7 @@ public class RCTEffectTickMixin {
         //The higher the RCT level, the lower the fatigue (highest level is 0.5x less fatigue)
         if (instance instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
-            float lvlMaxLvlRatio = Math.min(data.levels.getRCTLevel() / JujutsuData.Levels.MAX_RCT_LEVEL, 1);
+            float lvlMaxLvlRatio = (float) Math.min(data.levels.getRCTLevel() / Config.MAX_RCT_LEVEL.get(), 1);
             increment = (int) Math.max(20 * (1 - lvlMaxLvlRatio), 10);
         }
         int fatigueDuration = instance.hasEffect(JujutsucraftModMobEffects.FATIGUE.get()) ? instance.getEffect(JujutsucraftModMobEffects.FATIGUE.get()).getDuration() : 0;
@@ -92,14 +93,14 @@ public class RCTEffectTickMixin {
 
 
                         //If healing others, decrease heal amount by 4x (max rct level is only 2x)
-                        amountHealed *= ValueUtil.lerp(0.25f, 0.5f, healerData.levels.getRCTLevel() / JujutsuData.Levels.MAX_RCT_LEVEL);
+                        amountHealed *= ValueUtil.lerp(0.25f, 0.5f, healerData.levels.getRCTLevel() /  Config.MAX_RCT_LEVEL.get());
                         healerData.levels.incrementRCTLevel((float) (amountHealed / 50));
 
                         //The further the healer is from healed, the lower the healing. 0-1 where 1 is closest
                         float distance = 1 - entity.distanceTo(healer) / 5;
                         amountHealed = amountHealed * Math.max(distance, 0.05f);
 
-                        float lvlMaxLvlRatio = Math.min(healerData.levels.getRCTLevel() / JujutsuData.Levels.MAX_RCT_LEVEL, 1);
+                        float lvlMaxLvlRatio = (float) Math.min(healerData.levels.getRCTLevel() /  Config.MAX_RCT_LEVEL.get(), 1);
 
                         //The higher the RCT level, the lower the fatigue (highest level is 0.5x less fatigue)
                         healerData.levels.incrementFatigue((int) Math.max(20 * (1 - lvlMaxLvlRatio), 10));

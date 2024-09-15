@@ -1,5 +1,6 @@
 package com.jujutsucraftaddon.events;
 
+import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.data.BarrierBreakProgressData;
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.client.ModSounds;
@@ -166,10 +167,10 @@ public class CommonEvents {
 
         JujutsuData data = JujutsuData.get(player);
         boolean disableFlight = false;
-        if (((ServerPlayer) player).gameMode.getGameModeForPlayer() == GameType.SURVIVAL) {
-            if (player.getPersistentData().getBoolean("infinity")) {
+        if (data.data != null && ((ServerPlayer) player).gameMode.getGameModeForPlayer() == GameType.SURVIVAL) {
+            if (player.getPersistentData().getBoolean("infinity") && !player.hasEffect(JujutsucraftModMobEffects.UNSTABLE.get())) {
                 if (abilities.flying && player.tickCount % 20 == 0)
-                    data.data.PlayerCursePowerChange -= 10;
+                    data.data.PlayerCursePowerChange -= Config.LIMITLESS_FLIGHT_CE_CONSUMPTION.get();
 
                 if (data.data.PlayerCursePower > 20) {
                     if (!abilities.mayfly) {

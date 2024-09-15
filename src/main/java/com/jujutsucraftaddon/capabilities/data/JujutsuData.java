@@ -1,10 +1,12 @@
 package com.jujutsucraftaddon.capabilities.data;
 
+import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
 import com.jujutsucraftaddon.effects.IMobEffectInstance;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
 import com.jujutsucraftaddon.utility.AdvancementUtil;
+import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.core.Direction;
@@ -32,6 +34,7 @@ public class JujutsuData {
 
     public JujutsuData(Player player) {
         this.player = player;
+        data = player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(null);
     }
 
     public Tag writeNBT() {
@@ -134,7 +137,7 @@ public class JujutsuData {
         }
 
         public void incrementRCTLevel(float amount) {
-            RCT = Math.min(RCT + amount, MAX_RCT_LEVEL);
+            RCT = (float) Math.min(RCT + amount, Config.MAX_RCT_LEVEL.get());
             //Every 10 levels, execute once
             if (Math.round(RCT) % 10 == 0) {
                 float chance = RCT < 0.5f ? 0.2f : RCT;
@@ -159,8 +162,8 @@ public class JujutsuData {
             MobEffectInstance zone = parent.player.getEffect(JujutsucraftModMobEffects.ZONE.get());
             if (zone != null)
                 zoneAmp = (int) (zone.getAmplifier() * 1.5f);
-
-            return (int) Math.max(RCT / 5f, 20) + zoneAmp;
+            
+            return (int) ValueUtil.lerp(0, Config.MAX_RCT_LEVEL_AMPLIFIER.get(), RCT / Config.MAX_RCT_LEVEL.get()) + zoneAmp;
         }
 
         public float getRCTLevel() {
