@@ -85,12 +85,16 @@ minecraft {
 
         client {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--username', 'Sky'
 
         }
 
         server {
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
         }
@@ -134,6 +138,11 @@ repositories {
             includeGroup("com.eliotlash.mclib")
         }
     }
+    maven {
+        name "KosmX's maven"
+        url 'https://maven.kosmx.dev/'
+    }
+
 }
 
 dependencies {
@@ -168,10 +177,12 @@ dependencies {
     // Gecko 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${'4.4.2'}")
     implementation("com.eliotlash.mclib:mclib:20")
+    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:1.0.2-rc1+1.20")
+
 
     // jjk
     implementation fg.deobf('blank:JujutsuCraft-ver40-forge-1.20.1:40')
-    implementation fg.deobf('blank:player-animation-lib-forge:1.0.2-rc1+1.20')
+   // implementation fg.deobf('blank:player-animation-lib-forge:1.0.2-rc1+1.20')
     //   implementation fg.deobf('blank:JujutsuCraftGT2.ver39.1:2')
     implementation fg.deobf('blank:RPG-HUD:3.10')
 
