@@ -20,6 +20,7 @@ public abstract class LivingEntityMixin implements ILivingEntity {
 
     @Shadow
     private float absorptionAmount;
+    public boolean isDashing;
 
     @Inject(method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"))
     public final void implementCooldownReductionEffect(MobEffectInstance effectInstance, Entity p_147209_, CallbackInfoReturnable<Boolean> cir) {
@@ -67,6 +68,18 @@ public abstract class LivingEntityMixin implements ILivingEntity {
         damage = getDamageAfterArmorAbsorb(damageSource, damage);
         damage = getDamageAfterMagicAbsorb(damageSource, damage);
         return Math.max(damage - absorptionAmount, 0.0F);
+    }
+
+    @Unique
+    @Override
+    public void setIsDashing(boolean dashing) {
+        isDashing = dashing;
+    }
+
+    @Unique
+    @Override
+    public boolean isDashing() {
+        return isDashing;
     }
 
     @Shadow

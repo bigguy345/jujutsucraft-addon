@@ -9,6 +9,7 @@
   
   "key.category.jujutsucraftaddon": "Jujutsu Craft Addon",
   "key.second_fn": "2nd FN",
+  "key.dash": "Dash",
 
   "effect.jujutsucraftaddon.cursed_energy_regen": "Cursed Energy Regeneration",
   "effect.jujutsucraftaddon.cost_reduction": "Cost Reduction",
@@ -16,6 +17,10 @@
   "effect.jujutsucraftaddon.knockout_effect": "Knocked Out",
   "title.jujutsucraftaddon.knocked_out": "Knocked Out!",
   "message.jujutsucraftaddon.knocked_out": "Unable to move while knocked out!",
+
+  "message.dash_energy_consumed": "Energy consumed: ",
+  "message.dash_fully_charged": "Fully charged!",
+  "message.dash_out_of_energy": "OUT OF ENERGY!",
 
   "advancements.reverse_cursed_technique_others.title": "Reverse Cursed Technique Lv3",
   "advancements.reverse_cursed_technique_others.descr": "Aim at an other entity within 5 blocks to heal it (ADDON: Hold 2nd FN + RCT Key)"
