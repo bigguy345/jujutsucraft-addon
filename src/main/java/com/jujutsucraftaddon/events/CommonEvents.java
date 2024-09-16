@@ -8,6 +8,8 @@ import com.jujutsucraftaddon.effects.IMobEffectInstance;
 import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.entity.ILivingEntity;
 import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
+import com.jujutsucraftaddon.network.PacketHandler;
+import com.jujutsucraftaddon.network.packet.ClientConfigPacket;
 import com.jujutsucraftaddon.utility.BlockUtil;
 import com.jujutsucraftaddon.utility.JujuUtil;
 import com.jujutsucraftaddon.utility.ValueUtil;
@@ -28,6 +30,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -189,8 +193,15 @@ public class CommonEvents {
             }
         }
 
-        if (player.tickCount % 10 == 0)
-            JujutsuData.get(player).syncTracking();
+        JujutsuData.get(player).tick();
+    }
+
+    @SubscribeEvent
+    public void onFall(LivingFallEvent event) {
+        if (event.getEntity().getPersistentData().contains("killFallDamage")) {
+            event.setCanceled(true);
+            event.getEntity().getPersistentData().remove("killFallDamage");
+        }
     }
 
     @SubscribeEvent
@@ -198,6 +209,11 @@ public class CommonEvents {
         if (event.getEntity() instanceof LivingEntity livingEntity)
             if (livingEntity.hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get()))
                 BarrierBreakProgressData.sendProgressToTracking(livingEntity);
+    }
+
+    @SubscribeEvent
+    public void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        PacketHandler.sendToPlayer(event.getEntity(), new ClientConfigPacket());
     }
 
     @SubscribeEvent

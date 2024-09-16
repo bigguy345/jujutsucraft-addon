@@ -10,15 +10,15 @@
     "mc.client.MinecraftMixin"
   ],
   "mixins": [
-    "jujutsu.attacks.AttackStrongProcedureMixin",
-    "jujutsu.attacks.AttackWeakProcedureMixin",
-    "jujutsu.attacks.AttackStrongSwordProcedureMixin",
-    "jujutsu.attacks.AttackWeakSwordProcedureMixin",
     "jujutsu.HakariZone",
     "jujutsu.KeyChangeTechniqueMixin",
     "jujutsu.RangeAttackProcedureMixin",
     "jujutsu.RCTEffectTickMixin",
     "jujutsu.RCTKeyBindPressedMixin",
+    "jujutsu.attacks.AttackStrongProcedureMixin",
+    "jujutsu.attacks.AttackStrongSwordProcedureMixin",
+    "jujutsu.attacks.AttackWeakProcedureMixin",
+    "jujutsu.attacks.AttackWeakSwordProcedureMixin",
     "jujutsu.domain.DomainExpansionBattleProcedure",
     "jujutsu.domain.DomainExpansionCreateBarrierMixin",
     "jujutsu.domain.DomainExpansionEntityProcedure",
@@ -27,7 +27,8 @@
     "mc.EntityMixin",
     "mc.LivingEntityMixin",
     "mc.MobEffectInstanceMixin",
-    "mc.MobMixin"
+    "mc.MobMixin",
+    "mc.ServerGamePacketListenerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

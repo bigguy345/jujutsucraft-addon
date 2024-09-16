@@ -1,10 +1,7 @@
 package com.jujutsucraftaddon.network;
 
 import com.jujutsucraftaddon.Main;
-import com.jujutsucraftaddon.network.packet.BarrierBreakProgessPacket;
-import com.jujutsucraftaddon.network.packet.KeyInputPacket;
-import com.jujutsucraftaddon.network.packet.ReversedCTPacket;
-import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
+import com.jujutsucraftaddon.network.packet.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,8 +21,9 @@ public class PacketHandler {
         int id = 0;
         CHANNEL.messageBuilder(KeyInputPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(KeyInputPacket::encode).decoder(KeyInputPacket::new).consumerMainThread(KeyInputPacket::handle).add();
         CHANNEL.messageBuilder(ReversedCTPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(ReversedCTPacket::encode).decoder(ReversedCTPacket::new).consumerMainThread(ReversedCTPacket::handle).add();
+        CHANNEL.messageBuilder(DashPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(DashPacket::encode).decoder(DashPacket::new).consumerMainThread(DashPacket::handle).add();
 
-
+        CHANNEL.messageBuilder(ClientConfigPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(ClientConfigPacket::encode).decoder(ClientConfigPacket::new).consumerMainThread(ClientConfigPacket::handle).add();
         CHANNEL.messageBuilder(SyncJujutsuData.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncJujutsuData::encode).decoder(SyncJujutsuData::new).consumerMainThread(SyncJujutsuData::handle).add();
         CHANNEL.messageBuilder(BarrierBreakProgessPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(BarrierBreakProgessPacket::encode).decoder(BarrierBreakProgessPacket::new).consumerMainThread(BarrierBreakProgessPacket::handle).add();
     }
