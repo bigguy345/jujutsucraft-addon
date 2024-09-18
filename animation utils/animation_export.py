@@ -2,8 +2,9 @@ import bpy, json, os
 
 
 HOLD_ON_LAST_FRAME = False
+EXPORT_TO_GAME_RESOURCES = True
 
-file_name = "emote.json"
+file_name = "emote333.json"
 
 # Add "version", "_comments", "uuid" metadatas to this dictionary
 main_file_dict = {
@@ -214,7 +215,11 @@ if HOLD_ON_LAST_FRAME:
     main_file_dict["emote"]["isLoop"] = True
     main_file_dict["emote"]["returnTick"] = endtick
 
+if EXPORT_TO_GAME_RESOURCES:
+    path = r"Z:\old desktop\projects\jjk-addon\src\main\resources\assets\jujutsucraftaddon\player_animation"
+else:
+    path = os.path.dirname(bpy.data.filepath)
 
-output_file = os.path.join(os.path.dirname(bpy.data.filepath), file_name)
+output_file = os.path.join(path, file_name)
 with open(output_file, "w") as f:
     json.dump(main_file_dict, f, indent=4)
