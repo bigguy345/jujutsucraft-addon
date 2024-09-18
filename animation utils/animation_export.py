@@ -1,10 +1,13 @@
 import bpy, json, os
+from bpy.types import Operator
 
 
 HOLD_ON_LAST_FRAME = False
-EXPORT_TO_GAME_RESOURCES = True
 
-file_name = "emote333.json"
+file_name = "emote.json"
+# Export path here i.e C:\Users\user\Desktop
+# Exports to model's directory if path is empty or invalid
+EXPORT_PATH = r"Z:\old desktop\projects\jjk-addon\src\main\resources\assets\jujutsucraftaddon\player_animation"
 
 # Add "version", "_comments", "uuid" metadatas to this dictionary
 main_file_dict = {
@@ -63,7 +66,8 @@ def correctValue(value, name, type, fcurve):
 
 def getPartData(name):
     if (
-        bpy.data.objects[name].animation_data is not None
+        name in bpy.data.objects
+        and bpy.data.objects[name].animation_data is not None
         and bpy.data.objects[name].animation_data.action is not None
     ):
         for fcurve in bpy.data.objects[name].animation_data.action.fcurves:
@@ -105,7 +109,7 @@ def getPartData(name):
     bendName = name + "_bend"
 
     if (
-        name != "head"
+        bendName in bpy.data.objects
         and bpy.data.objects[bendName].animation_data is not None
         and bpy.data.objects[bendName].animation_data.action is not None
     ):
@@ -135,7 +139,7 @@ def getPartData(name):
 
 
 def getKeyframeObj(name, frame):
-    if bpy.data.objects[name].animation_data is None:
+    if name not in bpy.data.objects or bpy.data.objects[name].animation_data is None:
         return None
 
     action = bpy.data.objects[name].animation_data.action
@@ -215,11 +219,19 @@ if HOLD_ON_LAST_FRAME:
     main_file_dict["emote"]["isLoop"] = True
     main_file_dict["emote"]["returnTick"] = endtick
 
-if EXPORT_TO_GAME_RESOURCES:
-    path = r"Z:\old desktop\projects\jjk-addon\src\main\resources\assets\jujutsucraftaddon\player_animation"
-else:
-    path = os.path.dirname(bpy.data.filepath)
+if not os.path.isdir(EXPORT_PATH) or not EXPORT_PATH:
+    EXPORT_PATH = os.path.dirname(bpy.data.filepath)
 
-output_file = os.path.join(path, file_name)
+output_file = os.path.join(EXPORT_PATH, file_name)
 with open(output_file, "w") as f:
     json.dump(main_file_dict, f, indent=4)
+
+
+def ShowMessageBox(title="Message Box", message="", icon="CHECKMARK"):
+    def draw(self, context):
+        self.layout.label(text=message)
+
+    bpy.context.window_manager.popup_menu(draw, title=title, icon=icon)
+
+
+ShowMessageBox("Successfully created " + file_name + "!", "Exported to " + output_file)
