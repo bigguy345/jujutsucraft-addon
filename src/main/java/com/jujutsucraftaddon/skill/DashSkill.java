@@ -2,6 +2,7 @@ package com.jujutsucraftaddon.skill;
 
 import com.jujutsucraftaddon.client.ClientCache;
 import com.jujutsucraftaddon.utility.ValueUtil;
+import dev.kosmx.playerAnim.core.util.Easing;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -28,7 +29,7 @@ public class DashSkill {
     }
 
     public static float calculateStrength(float charge, float dashLevel) {
-        return 2 + charge * ValueUtil.lerp(1, 20, dashLevel / ClientCache.MAX_DASH_LEVEL);
+        return 2 + charge * ValueUtil.lerp(1, ClientCache.MAX_DASH_STRENGTH, dashLevel / ClientCache.MAX_DASH_LEVEL) * Easing.inCubic(charge);
     }
 
     public static void recordVelocity(float velocity) {
