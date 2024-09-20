@@ -47,9 +47,11 @@ public class KeyHandler {
         if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE && DASH_CHARGE > 0) {
             //  PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
 
+            //TESTING SHIT
             //  mc.player.setPos(0,4,0);
             //  mc.player.setYRot(0);
             //  mc.player.setYBodyRot(0);
+            
             JujutsuData data = JujutsuData.get(mc.player);
             Vec3 lookvec = mc.player.getLookAngle();
 
@@ -57,7 +59,7 @@ public class KeyHandler {
             Vec3 vec1 = new Vec3(lookvec.x, Math.min(lookvec.y, 0.35f), lookvec.z);
 
 
-            double strength = calculateStrength(DASH_CHARGE, 100);
+            double strength = calculateStrength(DASH_CHARGE, 100); //DASH LEVEL AS 2ND ARG
             Vec3 vec2 = vec1.scale(strength);
 
             //Limits how high up dash can go
@@ -123,7 +125,6 @@ public class KeyHandler {
                 //Fully charges over the span of 8 seconds by default
                 float increment = (0.05f / 14) * multi;
                 DASH_CHARGE += increment;
-                dash.add(increment);
 
                 if (DASH_CHARGE > 0.25) {
                     AnimationController animController = getController(mc.player);

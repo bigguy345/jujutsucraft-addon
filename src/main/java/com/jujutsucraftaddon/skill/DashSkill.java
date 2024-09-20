@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class DashSkill {
 
     public static Deque<Float> velocityHistory = new LinkedList<>();
-    public static float DASH_CHARGE, DASH_SUPER_CHARGE,ENERGY_NEEDED;
+    public static float DASH_CHARGE, DASH_SUPER_CHARGE, ENERGY_NEEDED;
     public static boolean OUT_OF_ENERGY;
     public float strength, charge, superCharge, speed;
     public int ticks;
