@@ -2,6 +2,8 @@ package com.jujutsucraftaddon.network;
 
 import com.jujutsucraftaddon.Main;
 import com.jujutsucraftaddon.network.packet.*;
+import com.jujutsucraftaddon.network.packet.animation.C2SAnimationPacket;
+import com.jujutsucraftaddon.network.packet.animation.S2CAnimationPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,13 +21,20 @@ public class PacketHandler {
 
     public static void init(FMLCommonSetupEvent event) {
         int id = 0;
+
+        //C2S
         CHANNEL.messageBuilder(KeyInputPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(KeyInputPacket::encode).decoder(KeyInputPacket::new).consumerMainThread(KeyInputPacket::handle).add();
         CHANNEL.messageBuilder(ReversedCTPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(ReversedCTPacket::encode).decoder(ReversedCTPacket::new).consumerMainThread(ReversedCTPacket::handle).add();
         CHANNEL.messageBuilder(DashPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(DashPacket::encode).decoder(DashPacket::new).consumerMainThread(DashPacket::handle).add();
 
+        //S2C
         CHANNEL.messageBuilder(ClientConfigPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(ClientConfigPacket::encode).decoder(ClientConfigPacket::new).consumerMainThread(ClientConfigPacket::handle).add();
         CHANNEL.messageBuilder(SyncJujutsuData.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(SyncJujutsuData::encode).decoder(SyncJujutsuData::new).consumerMainThread(SyncJujutsuData::handle).add();
         CHANNEL.messageBuilder(BarrierBreakProgessPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(BarrierBreakProgessPacket::encode).decoder(BarrierBreakProgessPacket::new).consumerMainThread(BarrierBreakProgessPacket::handle).add();
+
+        //Animations
+        CHANNEL.messageBuilder(C2SAnimationPacket.class, id++, NetworkDirection.PLAY_TO_SERVER).encoder(C2SAnimationPacket::encode).decoder(C2SAnimationPacket::new).consumerMainThread(C2SAnimationPacket::handle).add();
+        CHANNEL.messageBuilder(S2CAnimationPacket.class, id++, NetworkDirection.PLAY_TO_CLIENT).encoder(S2CAnimationPacket::encode).decoder(S2CAnimationPacket::new).consumerMainThread(S2CAnimationPacket::handle).add();
     }
 
     public static void sendToServer(Packet msg) {
