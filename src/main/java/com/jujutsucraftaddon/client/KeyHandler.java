@@ -2,6 +2,7 @@ package com.jujutsucraftaddon.client;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.client.animation.AnimationController;
+import com.jujutsucraftaddon.client.animation.Animations;
 import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.events.custom.client.KeyMappingDownEvent;
 import com.jujutsucraftaddon.network.PacketHandler;
@@ -23,7 +24,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-import static com.jujutsucraftaddon.client.animation.Animations.*;
+import static com.jujutsucraftaddon.client.animation.Animations.SUPER_DASH;
+import static com.jujutsucraftaddon.client.animation.Animations.getController;
 import static com.jujutsucraftaddon.skill.DashSkill.*;
 
 public class KeyHandler {
@@ -51,7 +53,7 @@ public class KeyHandler {
             //  mc.player.setPos(0,4,0);
             //  mc.player.setYRot(0);
             //  mc.player.setYBodyRot(0);
-            
+
             JujutsuData data = JujutsuData.get(mc.player);
             Vec3 lookvec = mc.player.getLookAngle();
 
@@ -66,8 +68,8 @@ public class KeyHandler {
             Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 4f), vec2.z);
             mc.player.setDeltaMovement(launchVec);
 
-           // System.out.println("str: " + strength);
-          //  System.out.println("done");
+            // System.out.println("str: " + strength);
+            //  System.out.println("done");
             data.currentDash = new DashSkill((float) strength, DASH_CHARGE, DASH_SUPER_CHARGE);
             PacketHandler.CHANNEL.sendToServer(new DashPacket(data.currentDash));
             DASH_CHARGE = DASH_SUPER_CHARGE = 0;
@@ -131,7 +133,7 @@ public class KeyHandler {
                     if (animController.isAnimation(SUPER_DASH))
                         animController.setSpeed(multi);
                     else
-                        animController.play(SUPER_DASH);
+                        animController.play(SUPER_DASH).setCanMove(false);
                 }
 
                 if (secondFN)

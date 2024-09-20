@@ -23,7 +23,8 @@ public class AnimationController<T extends IAnimation> extends ModifierLayer {
     public AbstractClientPlayer player;
     public ResourceLocation currentAnimation;
     private float speed = 1;
-    
+    public boolean canMove = true;
+
     //auto updates other clients with this client's animation state
     public boolean autoUpdate = true;
 
@@ -37,14 +38,19 @@ public class AnimationController<T extends IAnimation> extends ModifierLayer {
     }
 
     public void tick() {
-        if (getAnimationPlayer() == null && speed != 1) {
-            this.speed = 1;
-            for (AbstractModifier modif : getModifiers()) {
-                if (modif instanceof SpeedModifier speedModif) {
-                    speedModif.speed = 1;
-                    return;
+        if (getAnimationPlayer() == null) {
+            if (speed != 1) {
+                this.speed = 1;
+                for (AbstractModifier modif : getModifiers()) {
+                    if (modif instanceof SpeedModifier speedModif) {
+                        speedModif.speed = 1;
+                        return;
+                    }
                 }
             }
+            
+            if(!canMove)
+                canMove = true;
         }
 
         super.tick();
@@ -130,6 +136,15 @@ public class AnimationController<T extends IAnimation> extends ModifierLayer {
 
     public float getSpeed() {
         return speed;
+    }
+
+    public boolean canMove() {
+        return canMove;
+    }
+
+    public AnimationController setCanMove(boolean canMove) {
+        this.canMove = canMove;
+        return this;
     }
 
     public boolean isAnimation(String name) {
