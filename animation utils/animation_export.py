@@ -1,17 +1,16 @@
 import bpy, json, os
-from bpy.types import Operator
 
 
-HOLD_ON_LAST_FRAME = False
+HOLD_ON_LAST_FRAME = True
+file_name = "super_dash.json"
 
-file_name = "emote.json"
 # Export path here i.e C:\Users\user\Desktop
 # Exports to model's directory if path is empty or invalid
-EXPORT_PATH = r"Z:\old desktop\projects\jjk-addon\src\main\resources\assets\jujutsucraftaddon\player_animation"
+EXPORT_PATH = r""
 
 # Add "version", "_comments", "uuid" metadatas to this dictionary
 main_file_dict = {
-    "name": "name",
+    "name": "super_dash",
     "author": "Your name",
     "description": "description",
     "emote": {
@@ -26,6 +25,7 @@ main_file_dict = {
     },
 }
 
+LEGS_Z_OFFSET = 3
 data_sort_order = ["x", "y", "z", "pitch", "yaw", "roll", "bend_data"]
 partdata = {}
 endtick = 0
@@ -34,6 +34,9 @@ endtick = 0
 def correctValue(value, name, type, fcurve):
     if name == "head" and type == "y":
         value -= 3
+
+    if (name == "rightLeg" or name == "leftLeg") and type == "y":
+        value -= LEGS_Z_OFFSET
 
     if fcurve.data_path == "location":
         if not name == "torso":
@@ -234,4 +237,7 @@ def ShowMessageBox(title="Message Box", message="", icon="CHECKMARK"):
     bpy.context.window_manager.popup_menu(draw, title=title, icon=icon)
 
 
-ShowMessageBox("Successfully created " + file_name + "!", "Exported to " + output_file)
+ShowMessageBox(f"Successfully created {file_name}!", f"Exported to {output_file}")
+
+GREEN = "\033[92m"
+print(GREEN + f"Successfully created {file_name}!", f"Exported to {output_file}")
