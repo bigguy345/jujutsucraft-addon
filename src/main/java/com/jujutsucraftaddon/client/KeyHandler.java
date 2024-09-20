@@ -66,8 +66,8 @@ public class KeyHandler {
             Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 4f), vec2.z);
             mc.player.setDeltaMovement(launchVec);
 
-            System.out.println("str: " + strength);
-            System.out.println("done");
+           // System.out.println("str: " + strength);
+          //  System.out.println("done");
             data.currentDash = new DashSkill((float) strength, DASH_CHARGE, DASH_SUPER_CHARGE);
             PacketHandler.CHANNEL.sendToServer(new DashPacket(data.currentDash));
             DASH_CHARGE = DASH_SUPER_CHARGE = 0;

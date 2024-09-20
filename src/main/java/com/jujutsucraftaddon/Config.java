@@ -37,7 +37,7 @@ public class Config {
 
         BUILDER.push("Dash");
         DASH_MAX_LEVEL = BUILDER.comment("Max Dash level").defineInRange("maxDashLevel", 100f, 0, 1000);
-        DASH_MAX_STRENGTH = BUILDER.comment("Strength of fully charged Dash at max level (linearly interpolates between 0 and this value depending on level to max level ratio)").defineInRange("maxDashStrength", 20, 0, 50f);
+        DASH_MAX_STRENGTH = BUILDER.comment("Strength of fully charged Dash at max level (linearly interpolates between 0 and this value depending on level to max level ratio)").defineInRange("maxDashStrength", 30, 0, 50f);
         DASH_LEVEL_GAIN = BUILDER.comment("Amount of Dash lvl gain per Dash strength. i.e a max level strength 20 * 0.05 (default) gains 1 level").defineInRange("dashLevelGain", 0.05f, 0, 100f);
         DASH_ENERGY_CONSUMPTION = BUILDER.comment("Amount of CE consumed per Dash strength. i.e if strength is 20 (max), consume 20 * 5 = 80 CE by default").defineInRange("dashEnergyConsumption", 5, 0, 1000);
         DASH_COOLDOWN = BUILDER.comment("Seconds of cooldown per dash strength i.e A 20 strength dash gets 20 seconds by default").defineInRange("dashCooldown", 1, 0, 1000f);

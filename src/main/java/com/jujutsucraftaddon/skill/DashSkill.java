@@ -29,7 +29,7 @@ public class DashSkill {
     }
 
     public static float calculateStrength(float charge, float dashLevel) {
-        return 2 + charge * ValueUtil.lerp(1, ClientCache.MAX_DASH_STRENGTH, dashLevel / ClientCache.MAX_DASH_LEVEL) * Easing.inCubic(charge);
+        return 2 + charge * ValueUtil.lerp(1, ClientCache.DASH_MAX_STRENGTH, dashLevel / ClientCache.DASH_MAX_LEVEL) * Easing.inCubic(charge);
     }
 
     public static void recordVelocity(float velocity) {

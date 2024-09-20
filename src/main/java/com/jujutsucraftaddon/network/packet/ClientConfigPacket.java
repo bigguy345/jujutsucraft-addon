@@ -26,8 +26,8 @@ public class ClientConfigPacket extends Packet {
         DASH_SUPERCHARGE_SPEED = buf.readFloat();
         DASH_ENERGY_CONSUMPTION = buf.readFloat();
         DASH_SUPERCHARGE_ENERGY_CONSUMPTION_MULTI = buf.readFloat();
-        MAX_DASH_LEVEL = buf.readFloat();
-        MAX_DASH_STRENGTH = buf.readFloat();
+        DASH_MAX_LEVEL = buf.readFloat();
+        DASH_MAX_STRENGTH = buf.readFloat();
     }
 
     public void handle(Player player, NetworkEvent.Context context) {
