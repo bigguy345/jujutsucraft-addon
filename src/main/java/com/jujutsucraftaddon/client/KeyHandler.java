@@ -1,6 +1,7 @@
 package com.jujutsucraftaddon.client;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
+import com.jujutsucraftaddon.client.animation.AnimationController;
 import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.events.custom.client.KeyMappingDownEvent;
 import com.jujutsucraftaddon.network.PacketHandler;
@@ -9,6 +10,7 @@ import com.jujutsucraftaddon.network.packet.ReversedCTPacket;
 import com.jujutsucraftaddon.skill.DashSkill;
 import com.jujutsucraftaddon.utility.Utility;
 import com.mojang.blaze3d.platform.InputConstants;
+import dev.kosmx.playerAnim.core.util.Ease;
 import net.mcreator.jujutsucraft.init.JujutsucraftModKeyMappings;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -21,6 +23,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+import static com.jujutsucraftaddon.client.animation.Animations.*;
 import static com.jujutsucraftaddon.skill.DashSkill.*;
 
 public class KeyHandler {
@@ -43,6 +46,10 @@ public class KeyHandler {
         //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
         if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE && DASH_CHARGE > 0) {
             //  PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
+
+            //  mc.player.setPos(0,4,0);
+            //  mc.player.setYRot(0);
+            //  mc.player.setYBodyRot(0);
             JujutsuData data = JujutsuData.get(mc.player);
             Vec3 lookvec = mc.player.getLookAngle();
 
@@ -63,6 +70,10 @@ public class KeyHandler {
             PacketHandler.CHANNEL.sendToServer(new DashPacket(data.currentDash));
             DASH_CHARGE = DASH_SUPER_CHARGE = 0;
             OUT_OF_ENERGY = false;
+
+            AnimationController animController = getController(mc.player);
+            if (animController.isAnimation(SUPER_DASH))
+                animController.stop(fade(20, Ease.OUTCUBIC));
         }
     }
 
@@ -108,9 +119,19 @@ public class KeyHandler {
                 //If sneaking, 2x slower charge, else if second FN, 4x faster charge
                 float multi = mc.options.keyShift.isDown() ? 0.25f : (secondFN ? ClientCache.DASH_SUPERCHARGE_SPEED : 1f);
 
+
                 //Fully charges over the span of 8 seconds by default
                 float increment = (0.05f / 14) * multi;
                 DASH_CHARGE += increment;
+                dash.add(increment);
+
+                if (DASH_CHARGE > 0.25) {
+                    AnimationController animController = getController(mc.player);
+                    if (animController.isAnimation(SUPER_DASH))
+                        animController.setSpeed(multi);
+                    else
+                        animController.play(SUPER_DASH);
+                }
 
                 if (secondFN)
                     DASH_SUPER_CHARGE += increment;
@@ -149,9 +170,6 @@ public class KeyHandler {
 
             DashSkill.recordVelocity(currentSpeed);
         }
-
-        //AnimationStack animationStack = PlayerAnimationAccess.getPlayerAnimLayer(clientPlayer);
-
     }
 
     @SubscribeEvent
