@@ -53,6 +53,10 @@ public class PacketHandler {
         CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), msg);
     }
 
+    public static void sendToTrackingOnly(Entity entity, Packet msg) {
+        CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> entity), msg);
+    }
+
     public static void sendToTrackingChunk(LevelChunk chunk, Packet msg) {
         CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), msg);
     }

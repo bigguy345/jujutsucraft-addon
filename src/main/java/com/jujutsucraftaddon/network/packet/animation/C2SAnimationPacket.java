@@ -28,6 +28,6 @@ public class C2SAnimationPacket extends Packet {
     }
 
     public void handle(Player player, NetworkEvent.Context context) {
-        PacketHandler.sendToTracking(player, new S2CAnimationPacket(player.getId(), type, data));
+        PacketHandler.sendToTrackingOnly(player, new S2CAnimationPacket(player.getId(), type, data));
     }
 }
