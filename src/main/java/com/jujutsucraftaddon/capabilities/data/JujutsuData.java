@@ -57,7 +57,7 @@ public class JujutsuData {
         nbt.putFloat("blackFlashChance", blackFlashChance);
         nbt.putFloat("blackFlashMulti", blackFlashDamageMulti);
         nbt.putBoolean("landedFirstBlackFlash", landedFirstBlackFlash);
-        
+
         if (!player.level().isClientSide()) {
             canHealOthers = AdvancementUtil.isDone((ServerPlayer) player, "jujutsucraftaddon:rct_others");
             infinityOn = player.getPersistentData().getBoolean("infinity");
@@ -181,7 +181,7 @@ public class JujutsuData {
         }
 
         public void incrementDashLevel(float amount) {
-            DASH = (float) Math.min(DASH + amount, Config.MAX_DASH_LEVEL.get());
+            DASH = (float) Math.min(DASH + amount, Config.DASH_MAX_LEVEL.get());
         }
 
         public void incrementRCTLevel(float amount) {
