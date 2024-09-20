@@ -73,7 +73,7 @@ public class KeyHandler {
 
             AnimationController animController = getController(mc.player);
             if (animController.isAnimation(SUPER_DASH))
-                animController.stop(fade(20, Ease.OUTCUBIC));
+                animController.setSpeed(1).stop(20, Ease.OUTCUBIC);
         }
     }
 
