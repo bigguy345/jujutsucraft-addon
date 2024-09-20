@@ -7,7 +7,8 @@
     "gecko.GeoEntityRendererMixin",
     "jujutsu.CooldownGuiFix",
     "mc.client.KeyMappingMixin",
-    "mc.client.MinecraftMixin"
+    "mc.client.MinecraftMixin",
+    "playerAnim.ModifierLayerMixin"
   ],
   "mixins": [
     "jujutsu.HakariZone",
