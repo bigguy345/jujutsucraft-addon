@@ -238,11 +238,8 @@ def correctValue(name, data_path, type, value):
     ):  # rotation correction (*-1) except for torzo roll/bend
         value = value * -1
 
-    if name == "head" and type == "y":
+    if (name == "head" or name == "rightLeg" or name == "leftLeg") and type == "y":
         value += 3
-
-    if value == 0:
-        value = 0.0001
 
     return value
 

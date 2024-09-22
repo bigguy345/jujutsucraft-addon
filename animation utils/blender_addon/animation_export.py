@@ -25,18 +25,14 @@ main_file_dict = {
     },
 }
 
-LEGS_Z_OFFSET = 3
 data_sort_order = ["x", "y", "z", "pitch", "yaw", "roll", "bend_data"]
 partdata = {}
 endtick = 0
 
 
 def correctValue(value, name, type, fcurve):
-    if name == "head" and type == "y":
+    if (name == "head" or name == "rightLeg" or name == "leftLeg") and type == "y":
         value -= 3
-
-    if (name == "rightLeg" or name == "leftLeg") and type == "y":
-        value -= LEGS_Z_OFFSET
 
     if fcurve.data_path == "location":
         if not name == "torso":
