@@ -2,7 +2,7 @@ import bpy, json, os
 
 
 HOLD_ON_LAST_FRAME = True
-file_name = "super_dash.json"
+file_name = "super_dash"
 
 # Export path here i.e C:\Users\user\Desktop
 # Exports to model's directory if path is empty or invalid
@@ -10,8 +10,8 @@ EXPORT_PATH = r""
 
 # Add "version", "_comments", "uuid" metadatas to this dictionary
 main_file_dict = {
-    "name": "super_dash",
-    "author": "Your name",
+    "name": file_name,
+    "author": "goatee",
     "description": "description",
     "emote": {
         "beginTick": bpy.context.scene.frame_start,
@@ -68,6 +68,7 @@ def correctValue(value, name, type, fcurve):
 
 
 def getPartData(name):
+    global partdata
     if (
         name in bpy.data.objects
         and bpy.data.objects[name].animation_data is not None
@@ -225,7 +226,7 @@ if HOLD_ON_LAST_FRAME:
 if not os.path.isdir(EXPORT_PATH) or not EXPORT_PATH:
     EXPORT_PATH = os.path.dirname(bpy.data.filepath)
 
-output_file = os.path.join(EXPORT_PATH, file_name)
+output_file = os.path.join(EXPORT_PATH, f"{file_name}.json")
 with open(output_file, "w") as f:
     json.dump(main_file_dict, f, indent=4)
 
@@ -240,4 +241,4 @@ def ShowMessageBox(title="Message Box", message="", icon="CHECKMARK"):
 ShowMessageBox(f"Successfully created {file_name}!", f"Exported to {output_file}")
 
 GREEN = "\033[92m"
-print(GREEN + f"Successfully created {file_name}!", f"Exported to {output_file}")
+print(f"{GREEN}Successfully created {file_name}!", f"Exported to {output_file}")
