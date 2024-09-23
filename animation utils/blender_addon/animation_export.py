@@ -2,15 +2,15 @@ import bpy, json, os
 
 
 HOLD_ON_LAST_FRAME = True
-file_name = "super_dash"
+animation_name = "test_format33"
 
 # Export path here i.e C:\Users\user\Desktop
 # Exports to model's directory if path is empty or invalid
-EXPORT_PATH = r""
+EXPORT_PATH = r"Z:\old desktop\projects\jjk-addon\src\main\resources\assets\jujutsucraftaddon\player_animation"
 
 # Add "version", "_comments", "uuid" metadatas to this dictionary
 main_file_dict = {
-    "name": file_name,
+    "name": animation_name,
     "author": "goatee",
     "description": "description",
     "emote": {
@@ -25,42 +25,9 @@ main_file_dict = {
     },
 }
 
-data_sort_order = ["x", "y", "z", "pitch", "yaw", "roll", "bend_data"]
+data_sort_order = ["x", "y", "z", "pitch", "yaw", "roll", "bend", "axis"]
 partdata = {}
 endtick = 0
-
-
-def correctValue(value, name, type, fcurve):
-    if (name == "head" or name == "rightLeg" or name == "leftLeg") and type == "y":
-        value -= 3
-
-    if fcurve.data_path == "location":
-        if not name == "torso":
-            value = value * -4
-        else:
-            value = value * 0.25
-            if type == "z":
-                value = value * -1
-    elif not (name == "torso" and not (type == "roll" or type == "bend")) and not (
-        type == "axis"
-    ):  # rotation correction (*-1) except for torzo roll/bend
-        value = value * -1
-
-    if type == "y":
-        if name == "rightLeg" or name == "leftLeg":
-            value += 12
-
-    if type == "z" or type == "x":
-        if name == "rightLeg":
-            value += 0.1
-        elif name == "leftLeg":
-            value -= 0.1
-
-    if name == "rightArm" or name == "leftArm":
-        if type == "y":
-            value += 12
-
-    return value
 
 
 def getPartData(name):
@@ -98,10 +65,13 @@ def getPartData(name):
 
                 if name not in partdata:
                     partdata[name] = {}
-                if frame not in partdata[name]:
-                    partdata[name][frame] = {}
+                if type not in partdata[name]:
+                    partdata[name][type] = {}
 
-                partdata[name][frame][type] = correctValue(value, name, type, fcurve)
+                partdata[name][type][frame] = [
+                    correctValue(value, name, type, fcurve),
+                    getEasing(keyframe),
+                ]
 
     ###########################################################################
     ###########################################################################
@@ -128,28 +98,46 @@ def getPartData(name):
 
                     if name not in partdata:
                         partdata[name] = {}
-                    if frame not in partdata[name]:
-                        partdata[name][frame] = {}
-                    if "bend_data" not in partdata[name][frame]:
-                        partdata[name][frame]["bend_data"] = {}
+                    if type not in partdata[name]:
+                        partdata[name][type] = {}
 
-                    partdata[name][frame]["bend_data"][type] = correctValue(
-                        value, name, type, fcurve
-                    )
+                    partdata[name][type][frame] = [
+                        correctValue(value, name, type, fcurve),
+                        getEasing(keyframe),
+                    ]
 
 
-def getKeyframeObj(name, frame):
-    if name not in bpy.data.objects or bpy.data.objects[name].animation_data is None:
-        return None
+def correctValue(value, name, type, fcurve):
+    if (name == "head" or name == "rightLeg" or name == "leftLeg") and type == "y":
+        value -= 3
 
-    action = bpy.data.objects[name].animation_data.action
-    if action is None:
-        return None
+    if fcurve.data_path == "location":
+        if not name == "torso":
+            value = value * -4
+        else:
+            value = value * 0.25
+            if type == "z":
+                value = value * -1
+    elif not (name == "torso" and not (type == "roll" or type == "bend")) and not (
+        type == "axis"
+    ):  # rotation correction (*-1) except for torzo roll/bend
+        value = value * -1
 
-    for fcurve in action.fcurves:
-        for keyframe in fcurve.keyframe_points:
-            if int(keyframe.co[0]) == frame:
-                return keyframe
+    if type == "y":
+        if name == "rightLeg" or name == "leftLeg":
+            value += 12
+
+    if type == "z" or type == "x":
+        if name == "rightLeg":
+            value += 0.1
+        elif name == "leftLeg":
+            value -= 0.1
+
+    if name == "rightArm" or name == "leftArm":
+        if type == "y":
+            value += 12
+
+    return roundValue(value)
 
 
 def getEasing(keyframe):
@@ -172,6 +160,12 @@ def getEasing(keyframe):
     return easing
 
 
+def roundValue(number):
+    if number == 0:
+        return 0
+    return round(number, 4 - len(str(int(abs(number)))))
+
+
 getPartData("head")
 getPartData("torso")
 getPartData("rightArm")
@@ -179,40 +173,21 @@ getPartData("leftArm")
 getPartData("rightLeg")
 getPartData("leftLeg")
 
-for name, frames in partdata.items():
-    frames = dict(sorted(frames.items()))
-    for frame, data in frames.items():
-        data = {key: data[key] for key in data_sort_order if key in data}  # Sorts data
-        frame_output = {
-            "tick": frame,
-            "easing": getEasing(getKeyframeObj(name, frame)),
-            "turn": 0,
-        }
+for name, types in partdata.items():
+    types = {key: types[key] for key in data_sort_order if key in types}  # Sorts data
+    for type, frames in types.items():
+        for frame, value in frames.items():
 
-        bend_data = {}
-        if "bend_data" in data:
-            bend_data = data.pop("bend_data")
-
-        if len(data) > 0:
-            frame_output.update({name: data})
+            frame_output = {
+                "tick": frame,
+                "easing": value[1],
+                "turn": 0,
+                name: {type: value[0]},
+            }
             main_file_dict["emote"]["moves"].append(frame_output)
 
-        if len(bend_data) > 0:
-            data = {
-                key: data[key] for key in ["bend", "axis"] if key in data  # Sorts data
-            }
-
-            bend_output = {
-                "tick": frame,
-                "easing": getEasing(getKeyframeObj(name + "_bend", frame)),
-                "turn": 0,
-            }
-            bend_output.update({name: bend_data})
-            main_file_dict["emote"]["moves"].append(bend_output)
-
-        if frame > endtick:
-            endtick = frame
-
+            if frame > endtick:
+                endtick = frame
 
 main_file_dict["emote"]["endTick"] = endtick
 if HOLD_ON_LAST_FRAME:
@@ -221,8 +196,7 @@ if HOLD_ON_LAST_FRAME:
 
 if not os.path.isdir(EXPORT_PATH) or not EXPORT_PATH:
     EXPORT_PATH = os.path.dirname(bpy.data.filepath)
-
-output_file = os.path.join(EXPORT_PATH, f"{file_name}.json")
+output_file = os.path.join(EXPORT_PATH, f"{animation_name}.json")
 with open(output_file, "w") as f:
     json.dump(main_file_dict, f, indent=4)
 
@@ -234,7 +208,7 @@ def ShowMessageBox(title="Message Box", message="", icon="CHECKMARK"):
     bpy.context.window_manager.popup_menu(draw, title=title, icon=icon)
 
 
-ShowMessageBox(f"Successfully created {file_name}!", f"Exported to {output_file}")
+ShowMessageBox(f"Successfully saved {animation_name}!", f"Exported to {output_file}")
 
 GREEN = "\033[92m"
-print(f"{GREEN}Successfully created {file_name}!", f"Exported to {output_file}")
+print(f"{GREEN}Successfully saved {animation_name}!", f"Exported to {output_file}")
