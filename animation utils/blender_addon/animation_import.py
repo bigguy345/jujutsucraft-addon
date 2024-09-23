@@ -65,31 +65,9 @@ def readAnimation(main_file_dict):
             if name in body_parts:
                 readPart(name, data, frame, easing)
 
-    # readPart("head")
-    # readPart("torso")
-    # readPart("rightArm")
-    # readPart("leftArm")
-    # readPart("rightLeg")
-    # readPart("leftLeg")
+    from .constants import setImportName
 
-
-init_complete = []
-
-
-def initPart(bone, name: str, action: Action):
-    if name not in init_complete:
-        for i in range(3):
-            fcurve = action.fcurves.find("location", index=i)
-            if fcurve is None:
-                fcurve = action.fcurves.new("location", index=i)
-            fcurve.keyframe_points.insert(0, bone.location[i])
-
-            fcurve = action.fcurves.find("rotation_euler", index=i)
-            if fcurve is None:
-                fcurve = action.fcurves.new("rotation_euler", index=i)
-            fcurve.keyframe_points.insert(0, bone.rotation_euler[i])
-
-        init_complete.append(name)
+    setImportName(animation_name)
 
 
 def readPart(name, data: dict, frame, easing):
@@ -109,6 +87,25 @@ def readPart(name, data: dict, frame, easing):
             readBendableType(name, type, frame, value, easing)
         else:
             readType(action, name, type, frame, value, easing)
+
+
+init_complete = []
+
+
+def initPart(bone, name: str, action: Action):
+    if name not in init_complete:
+        for i in range(3):
+            fcurve = action.fcurves.find("location", index=i)
+            if fcurve is None:
+                fcurve = action.fcurves.new("location", index=i)
+            fcurve.keyframe_points.insert(0, bone.location[i])
+
+            fcurve = action.fcurves.find("rotation_euler", index=i)
+            if fcurve is None:
+                fcurve = action.fcurves.new("rotation_euler", index=i)
+            fcurve.keyframe_points.insert(0, bone.rotation_euler[i])
+
+        init_complete.append(name)
 
 
 def readType(action: Action, name, type, frame, value, easing):

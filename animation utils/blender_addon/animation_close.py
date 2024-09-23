@@ -1,5 +1,6 @@
 import bpy
 from .constants import body_parts
+from .constants import getAddonObject
 
 
 class CloseAnimationOp(bpy.types.Operator):
@@ -34,3 +35,7 @@ def closeAnimation():
         if bendBone.animation_data is None:
             continue
         bendBone.animation_data.action = None
+
+    from .constants import setImportName
+
+    setImportName("")

@@ -1,8 +1,10 @@
 import bpy, json, os
-
+from blender_addon.constants import getImportName
 
 HOLD_ON_LAST_FRAME = True
-animation_name = "test_format33"
+
+animation_name = "test_format_temp"
+animation_name = getImportName(animation_name)
 
 # Export path here i.e C:\Users\user\Desktop
 # Exports to model's directory if path is empty or invalid
@@ -142,12 +144,13 @@ def correctValue(value, name, type, fcurve):
 
 def getEasing(keyframe):
     if keyframe is None:
-        return "EASEINOUTQUAD"
+        return "INOUTQUAD"
 
     if keyframe.easing == "AUTO":
-        easing = "EASEINOUT"
-    else:
-        easing = "".join(keyframe.easing.split("_"))
+        easing = "INOUT"
+    elif "_" in keyframe.easing:
+        easing = "".join(keyframe.easing.split("_")[1::])
+
     if keyframe.interpolation == "BEZIER":
         easing = easing + "QUAD"
     else:
