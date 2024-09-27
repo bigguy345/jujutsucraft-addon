@@ -443,7 +443,7 @@ public class CommonEvents {
             double strongCharge = event.attacker.getPersistentData().getDouble("cnt6");
             double strongChargeKnockback = 1;
 
-            float knockoutChance = 1f;
+            float knockoutChance = 0f;
 
             if (strongCharge >= 1 && strongCharge < 3) {
                 strongChargeKnockback = 0.05f;
@@ -451,15 +451,15 @@ public class CommonEvents {
             } else if (strongCharge >= 3 && strongCharge < 5) {
                 strongChargeKnockback = 0.2f;
                 event.damage *= ValueUtil.randomBetween(1.25f, 1.5f) / 1.4f;
-                knockoutChance = 0.25f;
+                knockoutChance =  ValueUtil.randomBetween(0.15f, 0.25f);
             } else if (strongCharge >= 5) {
                 strongChargeKnockback = 0.4f;
                 event.damage *= ValueUtil.randomBetween(1.5f, 2) / 1.6f;
-                knockoutChance = 0.6f;
+                knockoutChance = ValueUtil.randomBetween(0.3f, 0.5f);
             }
 
-            MobEffectInstance knockout = event.attacked.getEffect(ModEffects.KNOCKOUT_EFFECT.get());
             if (Math.random() <= knockoutChance) {
+                MobEffectInstance knockout = event.attacked.getEffect(ModEffects.KNOCKOUT_EFFECT.get());
                 if (knockout == null) {
                     event.attacked.addEffect(new MobEffectInstance(ModEffects.KNOCKOUT_EFFECT.get(), 850, 99, false, false));
                     event.knockback = 0;
