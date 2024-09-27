@@ -21,6 +21,7 @@
   "message.dash_energy_consumed": "Energy consumed: ",
   "message.dash_fully_charged": "Fully charged!",
   "message.dash_out_of_energy": "OUT OF ENERGY!",
+  "message.dash_cooldown" : "Dash is on cooldown! ",
 
   "advancements.reverse_cursed_technique_others.title": "Reverse Cursed Technique Lv3",
   "advancements.reverse_cursed_technique_others.descr": "Aim at an other entity within 5 blocks to heal it (ADDON: Hold 2nd FN + RCT Key)"

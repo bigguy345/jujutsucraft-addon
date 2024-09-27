@@ -1,5 +1,7 @@
 package com.jujutsucraftaddon.client.render;
 
+import com.jujutsucraftaddon.capabilities.data.JujutsuData;
+import com.jujutsucraftaddon.client.KeyHandler;
 import com.jujutsucraftaddon.network.packet.BarrierBreakProgessPacket;
 import com.jujutsucraftaddon.skill.DashSkill;
 import com.jujutsucraftaddon.utility.JujuUtil;
@@ -38,8 +40,9 @@ public class RenderEvents {
 
     @SubscribeEvent
     public void onRenderGuiOverlay(RenderGuiOverlayEvent.Post event) {
+        Minecraft mc = Minecraft.getInstance();
+        JujutsuData data = JujutsuData.get(mc.player);
         if (DashSkill.DASH_CHARGE > 0) {
-            Minecraft mc = Minecraft.getInstance();
             GuiGraphics graphics = event.getGuiGraphics();
             ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
             float f = DashSkill.DASH_CHARGE;
@@ -64,6 +67,13 @@ public class RenderEvents {
                 energy.append(Component.literal(" (").append(Component.translatable("message.dash_out_of_energy")).append(Component.literal(")")).withStyle(style -> style.withColor(0xFF0000)));
 
             graphics.drawString(mc.font, energy, graphics.guiWidth() / 2 - w / 2, y - 50, 0xffffff);
+        }  else if (KeyHandler.Dash.isDown() &&data.cooldowns.DASH > 0){
+            GuiGraphics graphics = event.getGuiGraphics();
+            int y = graphics.guiHeight() - 32 + 3;
+            MutableComponent cooldown = Component.translatable("message.dash_cooldown").append(Component.literal(data.cooldowns.DASH / 20 + "s").withStyle(style -> style.withColor(0xFF0000)));// Red color
+            int w = mc.font.width(cooldown.getString());
+            graphics.drawString(mc.font, cooldown, graphics.guiWidth() / 2 - w / 2, y - 50, 0xffffff);
+
         }
     }
 

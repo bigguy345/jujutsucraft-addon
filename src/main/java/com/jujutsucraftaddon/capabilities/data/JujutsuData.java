@@ -45,6 +45,9 @@ public class JujutsuData {
     public void tick() {
         cooldowns.tick();
 
+        if (currentDash != null)
+            currentDash.tick(this);
+        
         if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();
     }
@@ -156,7 +159,7 @@ public class JujutsuData {
         }
 
         public void readNBT(Tag tag) {
-            CompoundTag nbt = ((CompoundTag) tag).getCompound("levels");
+            CompoundTag nbt = (CompoundTag) tag;
             DASH = nbt.getInt("dash");
         }
     }
@@ -230,7 +233,7 @@ public class JujutsuData {
         }
 
         public void readNBT(Tag tag) {
-            CompoundTag nbt = ((CompoundTag) tag).getCompound("levels");
+            CompoundTag nbt = (CompoundTag) tag;
             RCT = nbt.getFloat("rct");
             DASH = nbt.getFloat("dash");
         }

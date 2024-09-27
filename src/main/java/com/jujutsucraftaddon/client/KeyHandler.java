@@ -2,7 +2,6 @@ package com.jujutsucraftaddon.client;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.client.animation.AnimationController;
-import com.jujutsucraftaddon.client.animation.Animations;
 import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.events.custom.client.KeyMappingDownEvent;
 import com.jujutsucraftaddon.network.PacketHandler;
@@ -15,6 +14,8 @@ import dev.kosmx.playerAnim.core.util.Ease;
 import net.mcreator.jujutsucraft.init.JujutsucraftModKeyMappings;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -24,8 +25,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-import static com.jujutsucraftaddon.client.animation.Animations.SUPER_DASH;
-import static com.jujutsucraftaddon.client.animation.Animations.getController;
+import static com.jujutsucraftaddon.client.animation.Animations.*;
 import static com.jujutsucraftaddon.skill.DashSkill.*;
 
 public class KeyHandler {
@@ -46,38 +46,54 @@ public class KeyHandler {
             return;
 
         //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
-        if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE && DASH_CHARGE > 0) {
-            //  PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
-
-            //TESTING SHIT
-            //  mc.player.setPos(0,4,0);
-            //  mc.player.setYRot(0);
-            //  mc.player.setYBodyRot(0);
-
+        if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE) {
             JujutsuData data = JujutsuData.get(mc.player);
-            Vec3 lookvec = mc.player.getLookAngle();
+            if (DASH_CHARGE > 0) {
+                //  PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
 
-            //Decreases velocity in Y direction anything above 0.35+ is too powerful
-            Vec3 vec1 = new Vec3(lookvec.x, Math.min(lookvec.y, 0.35f), lookvec.z);
+                Vec3 lookvec = mc.player.getLookAngle();
+
+                //Decreases velocity in Y direction anything above 0.35+ is too powerful
+                double newX = lookvec.x, newZ = lookvec.z, newY = lookvec.y;
+                float xzMin = mc.player.onGround() && lookvec.y < 0.2f ? 0.5f : -1;
+                if (Math.abs(lookvec.x) >= Math.abs(lookvec.z))
+                    newX = Math.copySign(Math.max(Math.abs(lookvec.x), xzMin), lookvec.x);
+                else
+                    newZ = Math.copySign(Math.max(Math.abs(lookvec.z), xzMin), lookvec.z);
+
+                if (DASH_CHARGE < 0.3)
+                    newY = Mth.clamp(lookvec.y, 0.2f, 0.35f);
+                else
+                    newY = Math.copySign(Math.max(Math.abs(lookvec.y), 0.25), lookvec.y);
+
+                Vec3 vec1 = new Vec3(newX, newY, newZ);
 
 
-            double strength = calculateStrength(DASH_CHARGE, 100); //DASH LEVEL AS 2ND ARG
-            Vec3 vec2 = vec1.scale(strength);
+                double strength = calculateStrength(DASH_CHARGE, 100); //DASH LEVEL AS 2ND ARG
+                Vec3 vec2 = vec1.multiply(strength, strength, strength);
 
-            //Limits how high up dash can go
-            Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 4f), vec2.z);
-            mc.player.setDeltaMovement(launchVec);
+                //Limits how high up dash can go
+                Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 5f), vec2.z);
+                mc.player.setDeltaMovement(launchVec);
+                
+                data.currentDash = new DashSkill((float) strength, DASH_CHARGE, DASH_SUPER_CHARGE);
+                PacketHandler.CHANNEL.sendToServer(new DashPacket(data.currentDash));
+                
 
-            // System.out.println("str: " + strength);
-            //  System.out.println("done");
-            data.currentDash = new DashSkill((float) strength, DASH_CHARGE, DASH_SUPER_CHARGE);
-            PacketHandler.CHANNEL.sendToServer(new DashPacket(data.currentDash));
-            DASH_CHARGE = DASH_SUPER_CHARGE = 0;
-            OUT_OF_ENERGY = false;
+                AnimationController animController = getController(mc.player);
+                ResourceLocation dash_anim = LAST_DASH_ANIMATION == 1 ? DASH_RIGHT : DASH_LEFT;
+                LAST_DASH_ANIMATION = (byte) (LAST_DASH_ANIMATION == 1 ? 2 : 1);
 
-            AnimationController animController = getController(mc.player);
-            if (animController.isAnimation(SUPER_DASH))
-                animController.setSpeed(1).stop(20, Ease.OUTCUBIC);
+                if (animController.isAnimation(SUPER_DASH)) {
+                    animController.setSpeed(1).stop(20, Ease.OUTCUBIC).setCanMove(true);
+                    animController.replace(dash_anim, 190, Ease.OUTSINE);
+                } else
+                    animController.replace(dash_anim, 10, Ease.OUTCUBIC);
+                DASH_CHARGE = DASH_SUPER_CHARGE = 0;
+                OUT_OF_ENERGY = false;
+                if (!mc.player.isCreative())
+                    data.cooldowns.DASH = 20;
+            }
         }
     }
 
@@ -113,9 +129,11 @@ public class KeyHandler {
         ////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////
         //Dash
-        if (Dash.isDown() && data.cooldowns.DASH == 0 && DASH_CHARGE < 1) {
+        if (Dash.isDown() && (data.cooldowns.DASH == 0 || mc.player.isCreative()) && DASH_CHARGE < 1) {
             float strength = DashSkill.calculateStrength(DASH_CHARGE, 100);
             ENERGY_NEEDED = DashSkill.calculateEnergyConsumed(strength, DASH_SUPER_CHARGE, ClientCache.DASH_ENERGY_CONSUMPTION, ClientCache.DASH_SUPERCHARGE_ENERGY_CONSUMPTION_MULTI);
+
+            Vec3 lookvec = mc.player.getLookAngle();
 
             if (data.data.PlayerCursePower >= ENERGY_NEEDED) {
                 boolean secondFN = Second_FN.isDown();
@@ -125,10 +143,10 @@ public class KeyHandler {
 
 
                 //Fully charges over the span of 8 seconds by default
-                float increment = (0.05f / 14) * multi;
+                float increment = (0.05f / 10) * multi;
                 DASH_CHARGE += increment;
 
-                if (DASH_CHARGE > 0.25) {
+                if (DASH_CHARGE > 0.15) {
                     AnimationController animController = getController(mc.player);
                     if (animController.isAnimation(SUPER_DASH))
                         animController.setSpeed(multi);
@@ -151,14 +169,13 @@ public class KeyHandler {
             Vec3 velocity = mc.player.getDeltaMovement();
             float currentSpeed = (float) velocity.length();
 
-            if (data.infinityOn && Second_FN.isDown() && data.currentDash.ticks >= 10) {
+            if (data.infinityOn && Second_FN.isDown() && data.currentDash.airtime >= 10) {
                 currentSpeed = 0.4F;
                 mc.player.setDeltaMovement(velocity.scale(0.02f));
                 if (mc.player.getAbilities().mayfly)
                     mc.player.getAbilities().flying = true;
             }
 
-            data.currentDash.ticks++;
 
             if (mc.player.horizontalCollision || currentSpeed <= 0.4f) {
                 if (mc.player.horizontalCollision)

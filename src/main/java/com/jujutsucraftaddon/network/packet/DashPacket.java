@@ -1,6 +1,5 @@
 package com.jujutsucraftaddon.network.packet;
 
-import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.entity.ILivingEntity;
 import com.jujutsucraftaddon.network.Packet;
@@ -36,11 +35,7 @@ public class DashPacket extends Packet {
 
         if (dash.strength != 0) {
             data.currentDash = dash;
-            data.levels.incrementDashLevel((float) (dash.strength * Config.DASH_LEVEL_GAIN.get()));
-            data.data.PlayerCursePowerChange -= DashSkill.calculateEnergyConsumed(dash.strength, dash.superCharge, Config.DASH_ENERGY_CONSUMPTION.get(), Config.DASH_SUPERCHARGE_ENERGY_CONSUMPTION_MULTI.get());
-
-            ((ILivingEntity) player).setIsDashing(true);
-            player.getPersistentData().putBoolean("killFallDamage", true);
+            data.currentDash.init(data);
         } else {
             data.currentDash = null;
             ((ILivingEntity) player).setIsDashing(false);
