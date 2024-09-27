@@ -21,9 +21,9 @@ import net.minecraftforge.fml.common.Mod;
 public class Animations {
     public static ResourceLocation REGISTRY = new ResourceLocation(Main.MODID, "animation_factory");
 
-    public static ResourceLocation WAVING = new ResourceLocation(Main.MODID, "waving");
-    public static ResourceLocation TEST = new ResourceLocation(Main.MODID, "bend_sit");
     public static ResourceLocation SUPER_DASH = new ResourceLocation(Main.MODID, "super_dash");
+    public static ResourceLocation DASH_LEFT = new ResourceLocation(Main.MODID, "dash_left");
+    public static ResourceLocation DASH_RIGHT = new ResourceLocation(Main.MODID, "dash_right");
 
     public static void setup() {
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(REGISTRY, 42, Animations::registerPlayerAnimation);
@@ -40,24 +40,9 @@ public class Animations {
         if (player == null)
             return;
 
-        AnimationController animController = getController(player);
-
-        String s = event.getMessage().getString();
-        if (event.getMessage().getString().contains("wv"))
-            animController.play(WAVING);
-
-        if (event.getMessage().getString().contains("waving"))
-            animController.play(new ResourceLocation(Main.MODID, "waving_orig"));
-
-        if (event.getMessage().getString().contains("sit"))
-            animController.play(new ResourceLocation(Main.MODID, "bend_sit"));
-
-
-        if (event.getMessage().getString().contains("dash"))
-            animController.play(SUPER_DASH);
-
-        if (event.getMessage().getString().contains("test"))
-            animController.play(new ResourceLocation(Main.MODID, "super_dash_improved"));
+//        AnimationController animController = getController(player);
+//        if (event.getMessage().getString().contains("waving"))
+//            animController.play(new ResourceLocation(Main.MODID, "waving_orig"));
     }
 
     public static AnimationController<IAnimation> getController(AbstractClientPlayer player) {
