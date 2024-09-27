@@ -1,5 +1,6 @@
 package com.jujutsucraftaddon.Items;
 
+import com.jujutsucraftaddon.effects.ModEffects;
 import net.mcreator.jujutsucraft.entity.*;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.minecraft.world.InteractionHand;
@@ -23,11 +24,17 @@ public class DomainExpansionStickItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        HitResult raycast = ProjectileUtil.getHitResultOnViewVector(player, (p_281111_) -> !p_281111_.isSpectator() && p_281111_.isPickable(), 100);
+        if (level.isClientSide())
+            return InteractionResultHolder.fail(player.getItemInHand(hand));
 
+        HitResult raycast = ProjectileUtil.getHitResultOnViewVector(player, (p_281111_) -> !p_281111_.isSpectator() && p_281111_.isPickable(), 100);
+     //   if (player.isShiftKeyDown())
+          //  player.addEffect(new MobEffectInstance(ModEffects.KNOCKOUT_EFFECT.get(), 20*3, 99, false, false));
+        
         if (raycast instanceof EntityHitResult entityray) {
             Entity entity = entityray.getEntity();
             if (entity instanceof LivingEntity livingEntity) {
+                ((LivingEntity) entity).setHealth(10);
                 double skill = 0;
                 if (entity instanceof SukunaEntity || entity instanceof SukunaPerfectEntity || entity instanceof SukunaFushiguroEntity)
                     skill = 120;
@@ -46,12 +53,16 @@ public class DomainExpansionStickItem extends Item {
                 else if (entity instanceof HakariKinjiEntity)
                     skill = 2920;
 
+                if (!player.isShiftKeyDown())
+                    livingEntity.addEffect(new MobEffectInstance(ModEffects.KNOCKOUT_EFFECT.get(), 850, 99, false, false));
+
                 if (!((LivingEntity) entity).hasEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get())) {
-                    ((Mob) entity).setTarget(player);
-                    livingEntity.getPersistentData().putDouble("skill", skill);
-                    livingEntity.getPersistentData().putBoolean("FORCE_DOMAIN", true);
-                    livingEntity.getPersistentData().putInt("DOMAIN_TIME", 20 * 200);
-                    livingEntity.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.CURSED_TECHNIQUE.get(), Integer.MAX_VALUE, 0, false, false));
+                  //  if (entity instanceof Mob mob)
+                     //   mob.setTarget(player);
+                   // livingEntity.getPersistentData().putDouble("skill", skill);
+                   // livingEntity.getPersistentData().putBoolean("FORCE_DOMAIN", true);
+                   // livingEntity.getPersistentData().putInt("DOMAIN_TIME", 20 * 1000);
+                   // livingEntity.addEffect(new MobEffectInstance(JujutsucraftModMobEffects.CURSED_TECHNIQUE.get(), Integer.MAX_VALUE, 0, false, false));
                 } else
                     livingEntity.removeEffect(JujutsucraftModMobEffects.DOMAIN_EXPANSION.get());
 

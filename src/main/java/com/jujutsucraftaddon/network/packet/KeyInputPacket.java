@@ -26,7 +26,8 @@ public class KeyInputPacket extends Packet {
         ServerLevel world = (ServerLevel) player.level();
         switch (keyName.toLowerCase()) {
             case "hi":
-                player.setHealth(1);
+           //     player.setHealth(1);
+               world.getServer().getCommands().performPrefixedCommand(player.getServer().createCommandSourceStack(), "kill @e[type=!minecraft:player]");
                 break;
         }
     }
