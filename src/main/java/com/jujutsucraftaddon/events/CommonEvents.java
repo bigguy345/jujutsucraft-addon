@@ -51,7 +51,7 @@ public class CommonEvents {
             BlockEntity barrierEntity = world.getBlockEntity(toBreak);
             if (barrierEntity != null) {
                 LivingEntity caster = JujuUtil.getDomainCaster(world, barrierEntity);
-                if (caster == null) //|| entity == caster
+                if (caster == null|| entity == caster) //
                     return;
 
                 boolean playerCaster = caster instanceof Player;
@@ -193,7 +193,8 @@ public class CommonEvents {
             }
         }
 
-        JujutsuData.get(player).tick();
+        if (event.phase == TickEvent.Phase.END)
+            JujutsuData.get(player).tick();
     }
 
     @SubscribeEvent
