@@ -32,7 +32,7 @@ import static com.jujutsucraftaddon.skill.DashSkill.*;
 
 public class KeyHandler {
     public static final KeyMapping Second_FN = new KeyMapping("key.second_fn", GLFW.GLFW_KEY_LEFT_SHIFT, "key.category.jujutsucraftaddon");
-    public static final KeyMapping Dash = new KeyMapping("key.dash", GLFW.GLFW_KEY_Z, "key.category.jujutsucraftaddon");
+    public static final KeyMapping Dash = new KeyMapping("key.dash", GLFW.GLFW_KEY_X, "key.category.jujutsucraftaddon");
 
     //Registers all of this mod's keys on game startup
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
