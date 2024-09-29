@@ -30,11 +30,12 @@ import static com.jujutsucraftaddon.skill.DashSkill.*;
 
 public class KeyHandler {
     public static final KeyMapping Second_FN = new KeyMapping("key.second_fn", GLFW.GLFW_KEY_LEFT_SHIFT, "key.category.jujutsucraftaddon");
-    public static final KeyMapping Dash = new KeyMapping("key.dash", GLFW.GLFW_KEY_X, "key.category.jujutsucraftaddon");
+    public static final KeyMapping Dash = new KeyMapping("key.dash", GLFW.GLFW_KEY_Z, "key.category.jujutsucraftaddon");
 
     //Registers all of this mod's keys on game startup
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(Second_FN);
+        event.register(Dash);
     }
 
     //This fires whenever a key is pressed (either once, or held down continuously) in game
@@ -45,11 +46,10 @@ public class KeyHandler {
         if (mc.screen != null)
             return;
 
-        //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
+
         if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE) {
             JujutsuData data = JujutsuData.get(mc.player);
             if (DASH_CHARGE > 0) {
-                //  PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
 
                 Vec3 lookvec = mc.player.getLookAngle();
 
@@ -75,10 +75,10 @@ public class KeyHandler {
                 //Limits how high up dash can go
                 Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 5f), vec2.z);
                 mc.player.setDeltaMovement(launchVec);
-                
+
                 data.currentDash = new DashSkill((float) strength, DASH_CHARGE, DASH_SUPER_CHARGE);
                 PacketHandler.CHANNEL.sendToServer(new DashPacket(data.currentDash));
-                
+
 
                 AnimationController animController = getController(mc.player);
                 ResourceLocation dash_anim = LAST_DASH_ANIMATION == 1 ? DASH_RIGHT : DASH_LEFT;
