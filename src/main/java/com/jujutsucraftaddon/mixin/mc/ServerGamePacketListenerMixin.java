@@ -20,12 +20,6 @@ public class ServerGamePacketListenerMixin {
     @Shadow
     public ServerPlayer player;
 
-    @Inject(method = "handleMovePlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isFallFlying()Z", ordinal = 1))
-    private void disablePlayerTurning(ServerboundMovePlayerPacket p_9874_, CallbackInfo ci, @Local(name = "f2",print = true) LocalFloatRef maxAllowedVelocity) {
-        if (((ILivingEntity) player).isDashing())
-            maxAllowedVelocity.set(500);
-    }
-
     @ModifyVariable(method = "handleMovePlayer", at = @At("STORE"),ordinal = 2)
     private float increaseMaxAllowedVelocity(float x) {
         if (((ILivingEntity) player).isDashing())
