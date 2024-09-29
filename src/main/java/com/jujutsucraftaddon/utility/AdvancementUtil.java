@@ -9,11 +9,15 @@ import net.minecraft.server.level.ServerPlayer;
 public class AdvancementUtil {
 
     public static boolean grantAdvancement(ServerPlayer player, String advancementId) {
+        return grantAdvancement(player, new ResourceLocation(advancementId));
+    }
+
+    public static boolean grantAdvancement(ServerPlayer player, ResourceLocation advancementId) {
         MinecraftServer server = player.getServer();
         if (server == null)
             return false;
 
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(advancementId));
+        Advancement advancement = server.getAdvancements().getAdvancement(advancementId);
         if (advancement == null)
             return false;
 
@@ -28,12 +32,16 @@ public class AdvancementUtil {
     }
 
     public static boolean revokeAdvancement(ServerPlayer player, String advancementId) {
+        return revokeAdvancement(player, new ResourceLocation(advancementId));
+    }
+
+    public static boolean revokeAdvancement(ServerPlayer player, ResourceLocation advancementId) {
         MinecraftServer server = player.getServer();
         if (server == null)
             return false;
 
 
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(advancementId));
+        Advancement advancement = server.getAdvancements().getAdvancement(advancementId);
         if (advancement == null)
             return false;
 
@@ -42,17 +50,21 @@ public class AdvancementUtil {
         if (!playerProgress.isDone())
             for (String criterion : playerProgress.getCompletedCriteria())
                 player.getAdvancements().revoke(advancement, criterion);
-        
+
 
         return playerProgress.isDone();
     }
 
     public static boolean isDone(ServerPlayer player, String advancementId) {
+        return isDone(player, new ResourceLocation(advancementId));
+    }
+
+    public static boolean isDone(ServerPlayer player, ResourceLocation advancementId) {
         MinecraftServer server = player.getServer();
         if (server == null)
             return false;
 
-        Advancement advancement = server.getAdvancements().getAdvancement(new ResourceLocation(advancementId));
+        Advancement advancement = server.getAdvancements().getAdvancement(advancementId);
         if (advancement == null)
             return false;
 

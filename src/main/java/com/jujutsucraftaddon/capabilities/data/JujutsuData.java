@@ -2,6 +2,7 @@ package com.jujutsucraftaddon.capabilities.data;
 
 import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
+import com.jujutsucraftaddon.constants.JujutsuAdvancements;
 import com.jujutsucraftaddon.effects.IMobEffectInstance;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.SyncJujutsuData;
@@ -193,7 +194,7 @@ public class JujutsuData {
             if (Math.round(RCT) % 10 == 0) {
                 double chance = RCT < 0.5f ? Config.RCT_OTHERS_UNLOCK_CHANCE.get() : RCT;
                 if (Math.random() <= Math.min(chance, 0.5f)) {
-                    AdvancementUtil.grantAdvancement((ServerPlayer) parent.player, "jujutsucraftaddon:rct_others");
+                    AdvancementUtil.grantAdvancement((ServerPlayer) parent.player, JujutsuAdvancements.RCT_OTHERS);
                     parent.canHealOthers = true;
                 }
                 RCT += 0.5f;
