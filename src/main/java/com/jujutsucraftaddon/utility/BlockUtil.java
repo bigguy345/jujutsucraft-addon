@@ -3,6 +3,7 @@ package com.jujutsucraftaddon.utility;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +20,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BlockUtil {
+
+    public static void doSphericalExplosion(LivingEntity entity, BlockPos hitBlock, int radius) {
+        Level world = entity.level();
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    BlockPos targetPos = hitBlock.offset(x, y, z);
+                    double distanceSquared = x * x + y * y + z * z;
+                    if (Math.sqrt(distanceSquared) <= radius && world.getBlockState(targetPos).getBlock() != Blocks.BEDROCK) {
+                        double influence = (1.0 / (distanceSquared / (radius * radius) + 0.0001));
+                        if (influence >= 1.5f)
+                            entity.level().removeBlock(targetPos, true);
+                    }
+                }
+            }
+        }
+    }
 
     public static void doMeleeExplosion(LivingEntity entity, BlockPos hitBlock, int radius) {
         Level world = entity.level();

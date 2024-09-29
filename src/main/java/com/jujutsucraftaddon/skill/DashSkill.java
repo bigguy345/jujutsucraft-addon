@@ -4,9 +4,13 @@ import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.client.ClientCache;
 import com.jujutsucraftaddon.entity.ILivingEntity;
+import com.jujutsucraftaddon.utility.BlockUtil;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import dev.kosmx.playerAnim.core.util.Easing;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 
 import java.util.Deque;
 import java.util.LinkedList;
@@ -28,6 +32,7 @@ public class DashSkill {
 
     public void init(JujutsuData data) {
         Player player = data.player;
+        Level world = player.level();
         data.levels.incrementDashLevel((float) (strength * Config.DASH_LEVEL_GAIN.get()));
         data.data.PlayerCursePowerChange -= DashSkill.calculateEnergyConsumed(strength, superCharge, Config.DASH_ENERGY_CONSUMPTION.get(), Config.DASH_SUPERCHARGE_ENERGY_CONSUMPTION_MULTI.get());
 
@@ -38,6 +43,12 @@ public class DashSkill {
             else
                 cooldownTicks = (strength * Config.DASH_COOLDOWN.get()) * 20;
             data.cooldowns.DASH += cooldownTicks;
+        }
+        if (strength > 10 && player.onGround()) {
+            BlockUtil.doSphericalExplosion(player, player.blockPosition().below(), (int) ValueUtil.lerp(5f, 10, strength / Config.DASH_MAX_STRENGTH.get()));
+            world.playSound(null, player.blockPosition(), SoundEvents.GENERIC_EXPLODE, SoundSource.BLOCKS, strength / 3, (1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F) * 0.7F);
+            world.playSound(null, player.blockPosition(), SoundEvents.HOSTILE_BIG_FALL, SoundSource.BLOCKS, strength / 3, (1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F) * 0.7F);
+            player.playSound(SoundEvents.GENERIC_EXPLODE, 4.0F, (1.0F + (world.random.nextFloat() - world.random.nextFloat()) * 0.2F) * 0.7F);
         }
 
         ((ILivingEntity) player).setIsDashing(true);
@@ -62,7 +73,7 @@ public class DashSkill {
     }
 
     public static void recordVelocity(float velocity) {
-        if (velocityHistory.size() >= 5)
+        if (velocityHistory.size() >= 10)
             velocityHistory.removeFirst();
 
         velocityHistory.addLast(velocity);
