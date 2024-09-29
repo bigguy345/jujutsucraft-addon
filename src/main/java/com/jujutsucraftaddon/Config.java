@@ -13,6 +13,7 @@ public class Config {
 
     public static ForgeConfigSpec.DoubleValue MAX_RCT_LEVEL;
     public static ForgeConfigSpec.IntValue MAX_RCT_LEVEL_AMPLIFIER;
+    public static ForgeConfigSpec.DoubleValue RCT_BLACKFLASH_UNLOCK_CHANCE;
     public static ForgeConfigSpec.DoubleValue RCT_OTHERS_UNLOCK_CHANCE;
 
     public static ForgeConfigSpec.DoubleValue DASH_MAX_LEVEL;
@@ -34,6 +35,7 @@ public class Config {
         BUILDER.push("Reversed Cursed Technique");
         MAX_RCT_LEVEL = BUILDER.comment("Max Reversed Cursed Technique level").defineInRange("maxRCTLLevel", 100f, 0, 1000);
         MAX_RCT_LEVEL_AMPLIFIER = BUILDER.comment("Reversed Cursed Technique effect amplifier at max level (linearly interpolates between 0 and this value depending on level to max level ratio)").defineInRange("maxRCTAmplifier", 20, 0, 99);
+        RCT_BLACKFLASH_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Technique\" upon landing a black flash (default 0.2 === 20%)").defineInRange("blackflashRCTUnlockChance", 0, 0.2, 1);
         RCT_OTHERS_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Tech. Others\" upon first time unlocking \"Reversed Cursed Technique\" (default 0.25 === 25%)").defineInRange("othersRCTUnlockChance", 0, 0.25, 1);
         BUILDER.pop();
 

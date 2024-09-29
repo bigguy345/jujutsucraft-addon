@@ -4,12 +4,14 @@ import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.data.BarrierBreakProgressData;
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.client.ModSounds;
+import com.jujutsucraftaddon.constants.JujutsuAdvancements;
 import com.jujutsucraftaddon.effects.IMobEffectInstance;
 import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.entity.ILivingEntity;
 import com.jujutsucraftaddon.events.custom.BlackFlashEvent;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.ClientConfigPacket;
+import com.jujutsucraftaddon.utility.AdvancementUtil;
 import com.jujutsucraftaddon.utility.BlockUtil;
 import com.jujutsucraftaddon.utility.JujuUtil;
 import com.jujutsucraftaddon.utility.ValueUtil;
@@ -51,7 +53,7 @@ public class CommonEvents {
             BlockEntity barrierEntity = world.getBlockEntity(toBreak);
             if (barrierEntity != null) {
                 LivingEntity caster = JujuUtil.getDomainCaster(world, barrierEntity);
-                if (caster == null|| entity == caster) //
+                if (caster == null || entity == caster) //
                     return;
 
                 boolean playerCaster = caster instanceof Player;
@@ -451,7 +453,7 @@ public class CommonEvents {
             } else if (strongCharge >= 3 && strongCharge < 5) {
                 strongChargeKnockback = 0.2f;
                 event.damage *= ValueUtil.randomBetween(1.25f, 1.5f) / 1.4f;
-                knockoutChance =  ValueUtil.randomBetween(0.15f, 0.25f);
+                knockoutChance = ValueUtil.randomBetween(0.15f, 0.25f);
             } else if (strongCharge >= 5) {
                 strongChargeKnockback = 0.4f;
                 event.damage *= ValueUtil.randomBetween(1.5f, 2) / 1.6f;
@@ -466,6 +468,13 @@ public class CommonEvents {
                 }
             } else if (weakCharge >= 1 || strongCharge >= 1)
                 event.knockback *= 1 + (zoneKnockbackMulti * weakChargeKnockback * strongChargeKnockback);
+
+            if (Math.random() <= Config.RCT_BLACKFLASH_UNLOCK_CHANCE.get()) {
+                if (!AdvancementUtil.isDone((ServerPlayer) player, JujutsuAdvancements.RCT_1))
+                    AdvancementUtil.grantAdvancement((ServerPlayer) player, JujutsuAdvancements.RCT_1);
+                else if (!AdvancementUtil.isDone((ServerPlayer) player, JujutsuAdvancements.RCT_2))
+                    AdvancementUtil.grantAdvancement((ServerPlayer) player, JujutsuAdvancements.RCT_2);
+            }
         }
     }
 }
