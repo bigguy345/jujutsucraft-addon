@@ -15,7 +15,7 @@
     "hidden": false
   },
   "criteria": {
-    "reverse_cursed_technique_2_0": {
+    "reverse_cursed_technique_others": {
       "trigger": "minecraft:impossible"
     }
   },
