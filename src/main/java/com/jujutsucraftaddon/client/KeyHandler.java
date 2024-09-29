@@ -6,11 +6,13 @@ import com.jujutsucraftaddon.effects.ModEffects;
 import com.jujutsucraftaddon.events.custom.client.KeyMappingDownEvent;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.DashPacket;
+import com.jujutsucraftaddon.network.packet.KeyInputPacket;
 import com.jujutsucraftaddon.network.packet.ReversedCTPacket;
 import com.jujutsucraftaddon.skill.DashSkill;
 import com.jujutsucraftaddon.utility.Utility;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.kosmx.playerAnim.core.util.Ease;
+import dev.kosmx.playerAnim.core.util.Easing;
 import net.mcreator.jujutsucraft.init.JujutsucraftModKeyMappings;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -46,6 +48,10 @@ public class KeyHandler {
         if (mc.screen != null)
             return;
 
+        //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
+        if (InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_X) && event.getAction() == GLFW.GLFW_PRESS)
+            PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
+
 
         if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE) {
             JujutsuData data = JujutsuData.get(mc.player);
@@ -69,8 +75,9 @@ public class KeyHandler {
                 Vec3 vec1 = new Vec3(newX, newY, newZ);
 
 
-                double strength = calculateStrength(DASH_CHARGE, 100); //DASH LEVEL AS 2ND ARG
-                Vec3 vec2 = vec1.multiply(strength, strength, strength);
+                float dashLevel = data.levels.getDashLevel();
+                double strength = calculateStrength(DASH_CHARGE, dashLevel); //DASH LEVEL AS 2ND ARG
+                Vec3 vec2 = vec1.multiply(strength, 2 + strength * Easing.inQuad(dashLevel / ClientCache.DASH_MAX_LEVEL), strength);
 
                 //Limits how high up dash can go
                 Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 5f), vec2.z);
