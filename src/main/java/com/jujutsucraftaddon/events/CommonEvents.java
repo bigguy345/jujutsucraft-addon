@@ -245,6 +245,7 @@ public class CommonEvents {
             if (zone != null) {
                 if (zone.getAmplifier() < 4) {
                     int duration = 0;
+
                     switch (zone.getAmplifier()) {
                         case 0:
                             duration = 3600;
@@ -260,10 +261,7 @@ public class CommonEvents {
                             break;
                     }
 
-                    IMobEffectInstance effect = (IMobEffectInstance) zone;
-                    effect.setDuration(duration);
-                    effect.setDuration(zone.getAmplifier() + 1);
-                    effect.updateClient(player);
+                    ((IMobEffectInstance) zone).setDuration(duration).setAmplifier(zone.getAmplifier() + 1).updateClient(player);
                 }
             } else
                 player.addEffect(zone = new MobEffectInstance(JujutsucraftModMobEffects.ZONE.get(), 3600, 0, true, true));
