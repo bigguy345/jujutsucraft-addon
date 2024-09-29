@@ -47,7 +47,7 @@ public class JujutsuData {
 
         if (currentDash != null)
             currentDash.tick(this);
-        
+
         if (player.tickCount % 10 == 0)
             JujutsuData.get(player).syncTracking();
     }
@@ -184,11 +184,11 @@ public class JujutsuData {
         }
 
         public void incrementDashLevel(float amount) {
-            DASH = (float) Math.min(DASH + amount, Config.DASH_MAX_LEVEL.get());
+            DASH = (float) ValueUtil.clamp(DASH + amount, 0, Config.DASH_MAX_LEVEL.get());
         }
 
         public void incrementRCTLevel(float amount) {
-            RCT = (float) Math.min(RCT + amount, Config.MAX_RCT_LEVEL.get());
+            RCT = (float) ValueUtil.clamp(RCT + amount, 0, Config.MAX_RCT_LEVEL.get());
             //Every 10 levels, execute once
             if (Math.round(RCT) % 10 == 0) {
                 float chance = RCT < 0.5f ? 0.2f : RCT;
