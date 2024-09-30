@@ -33,11 +33,13 @@ import static com.jujutsucraftaddon.skill.DashSkill.*;
 public class KeyHandler {
     public static final KeyMapping Second_FN = new KeyMapping("key.second_fn", GLFW.GLFW_KEY_LEFT_SHIFT, "key.category.jujutsucraftaddon");
     public static final KeyMapping Dash = new KeyMapping("key.dash", GLFW.GLFW_KEY_X, "key.category.jujutsucraftaddon");
+    public static final KeyMapping Debug = new KeyMapping("Debugging key", GLFW.GLFW_KEY_UNKNOWN, "key.category.jujutsucraftaddon");
 
     //Registers all of this mod's keys on game startup
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(Second_FN);
         event.register(Dash);
+        event.register(Debug);
     }
 
     //This fires whenever a key is pressed (either once, or held down continuously) in game
@@ -49,7 +51,7 @@ public class KeyHandler {
             return;
 
         //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
-        if (InputConstants.isKeyDown(mc.getWindow().getWindow(), GLFW.GLFW_KEY_X) && event.getAction() == GLFW.GLFW_PRESS)
+        if (Debug.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_PRESS)
             PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
 
 
