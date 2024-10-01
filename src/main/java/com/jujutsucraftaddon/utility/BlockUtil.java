@@ -81,7 +81,7 @@ public class BlockUtil {
                     BlockState state = world.getBlockState(targetPos);
 
                     double distanceSquared = x * x + y * y + z * z;
-                    if (Math.sqrt(distanceSquared) <= radius && canBreak(world, state, targetPos)) {
+                    if (Math.sqrt(distanceSquared) <= radius && JujuUtil.isBarrier(world, targetPos)) {
                         Vec3 blockVec = new Vec3(hitBlock.getX() + x, hitBlock.getY() + y, hitBlock.getZ() + z);
                         Vec3 toPlayer = blockVec.subtract(entity.position());
 
