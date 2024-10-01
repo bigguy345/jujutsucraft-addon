@@ -61,6 +61,9 @@ public class BarrierBreakProgressData {
                                 byte newProgress = bytify(shatterPercent);
                                 if (prevProgress != newProgress)
                                     setProgress(entity, offset, newProgress);
+
+                                if (newProgress == 9)
+                                    world.removeBlock(offset, false);
                             }
                         }
                     }
