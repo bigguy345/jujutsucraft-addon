@@ -3,14 +3,15 @@ package com.jujutsucraftaddon.utility;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -27,8 +28,9 @@ public class BlockUtil {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     BlockPos targetPos = hitBlock.offset(x, y, z);
+                    BlockState state = world.getBlockState(targetPos);
                     double distanceSquared = x * x + y * y + z * z;
-                    if (Math.sqrt(distanceSquared) <= radius && world.getBlockState(targetPos).getBlock() != Blocks.BEDROCK) {
+                    if (Math.sqrt(distanceSquared) <= radius && canBreak(world, state, targetPos)) {
                         double influence = (1.0 / (distanceSquared / (radius * radius) + 0.0001));
                         if (influence >= 1.5f)
                             entity.level().removeBlock(targetPos, true);
@@ -38,6 +40,11 @@ public class BlockUtil {
         }
     }
 
+    public static boolean canBreak(Level world, BlockState state, BlockPos pos) {
+        Block block = world.getBlockState(pos).getBlock();
+        return block != Blocks.BEDROCK && state.getDestroySpeed(world, pos) != -1;
+    }
+
     public static void doMeleeExplosion(LivingEntity entity, BlockPos hitBlock, int radius) {
         Level world = entity.level();
         Vec3 lookVec = entity.getLookAngle().normalize();
@@ -45,8 +52,9 @@ public class BlockUtil {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     BlockPos targetPos = hitBlock.offset(x, y, z);
+                    BlockState state = world.getBlockState(targetPos);
                     double distanceSquared = x * x + y * y + z * z;
-                    if (Math.sqrt(distanceSquared) <= radius && world.getBlockState(targetPos).getBlock() != Blocks.BEDROCK) {
+                    if (Math.sqrt(distanceSquared) <= radius && canBreak(world, state, targetPos)) {
                         Vec3 blockVec = new Vec3(hitBlock.getX() + x, hitBlock.getY() + y, hitBlock.getZ() + z);
                         Vec3 toPlayer = blockVec.subtract(entity.position());
 
@@ -70,8 +78,10 @@ public class BlockUtil {
             for (int y = -radius; y <= radius; y++) {
                 for (int z = -radius; z <= radius; z++) {
                     BlockPos targetPos = hitBlock.offset(x, y, z);
+                    BlockState state = world.getBlockState(targetPos);
+
                     double distanceSquared = x * x + y * y + z * z;
-                    if (Math.sqrt(distanceSquared) <= radius && world.getBlockState(targetPos).getBlock() != Blocks.BEDROCK) {
+                    if (Math.sqrt(distanceSquared) <= radius && canBreak(world, state, targetPos)) {
                         Vec3 blockVec = new Vec3(hitBlock.getX() + x, hitBlock.getY() + y, hitBlock.getZ() + z);
                         Vec3 toPlayer = blockVec.subtract(entity.position());
 
