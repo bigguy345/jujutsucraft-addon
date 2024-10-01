@@ -93,14 +93,14 @@ public class RCTEffectTickMixin {
 
 
                         //If healing others, decrease heal amount by 4x (max rct level is only 2x)
-                        amountHealed *= ValueUtil.lerp(0.25f, 0.5f, healerData.levels.getRCTLevel() /  Config.MAX_RCT_LEVEL.get());
-                        healerData.levels.incrementRCTLevel((float) (amountHealed / 50));
+                        amountHealed *= ValueUtil.lerp(0.25f, 0.5f, healerData.levels.getRCTLevel() / Config.MAX_RCT_LEVEL.get());
+                        healerData.levels.incrementRCTLevel((float) (amountHealed * Config.RCT_LEVEL_GAIN.get()));
 
                         //The further the healer is from healed, the lower the healing. 0-1 where 1 is closest
                         float distance = 1 - entity.distanceTo(healer) / 5;
                         amountHealed = amountHealed * Math.max(distance, 0.05f);
 
-                        float lvlMaxLvlRatio = (float) Math.min(healerData.levels.getRCTLevel() /  Config.MAX_RCT_LEVEL.get(), 1);
+                        float lvlMaxLvlRatio = (float) Math.min(healerData.levels.getRCTLevel() / Config.MAX_RCT_LEVEL.get(), 1);
 
                         //The higher the RCT level, the lower the fatigue (highest level is 0.5x less fatigue)
                         healerData.levels.incrementFatigue((int) Math.max(20 * (1 - lvlMaxLvlRatio), 10));
@@ -122,7 +122,7 @@ public class RCTEffectTickMixin {
             //Increment RCT level. 1 heart healed is 1/50 levels.
             if (entity instanceof Player player) {
                 JujutsuData data = JujutsuData.get(player);
-                data.levels.incrementRCTLevel((float) (Math.abs(NUM1.get()) / 50));
+                data.levels.incrementRCTLevel((float) (Math.abs(NUM1.get()) * Config.RCT_LEVEL_GAIN.get()));
             }
         }
 

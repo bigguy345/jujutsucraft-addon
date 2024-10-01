@@ -13,6 +13,7 @@ public class Config {
 
     public static ForgeConfigSpec.DoubleValue MAX_RCT_LEVEL;
     public static ForgeConfigSpec.IntValue MAX_RCT_LEVEL_AMPLIFIER;
+    public static ForgeConfigSpec.DoubleValue RCT_LEVEL_GAIN;
     public static ForgeConfigSpec.DoubleValue RCT_BLACKFLASH_UNLOCK_CHANCE;
     public static ForgeConfigSpec.DoubleValue RCT_OTHERS_UNLOCK_CHANCE;
 
@@ -38,6 +39,8 @@ public class Config {
         BUILDER.push("Reversed Cursed Technique");
         MAX_RCT_LEVEL = BUILDER.comment("Max Reversed Cursed Technique level").defineInRange("maxRCTLLevel", 100f, 0, 1000);
         MAX_RCT_LEVEL_AMPLIFIER = BUILDER.comment("Reversed Cursed Technique effect amplifier at max level (linearly interpolates between 0 and this value depending on level to max level ratio)").defineInRange("maxRCTAmplifier", 20, 0, 99);
+        RCT_LEVEL_GAIN = BUILDER.comment("Amount of RCT lvl gain per heart healed. i.e healing 1 heart with default config (0.02) gains 0.02 levels, 50 hearts is 1 level").defineInRange("rctLevelGain", 0.02f, 0, 100f);
+
         RCT_BLACKFLASH_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Technique\" upon landing a black flash (default 0.2 === 20%)").defineInRange("blackflashRCTUnlockChance", 0.2, 0, 1);
         RCT_OTHERS_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Tech. Others\" upon first time unlocking \"Reversed Cursed Technique\" (default 0.25 === 25%)").defineInRange("othersRCTUnlockChance", 0.25, 0, 1);
         BUILDER.pop();
@@ -66,7 +69,7 @@ public class Config {
 
 
         BUILDER.push("Server settings");
-        MAX_ALLOWED_DASH_VELOCITY = BUILDER.comment("Server will invalidate the movement and report in console if it goes above this number! Increase accordingly with maxDashStrength").defineInRange("maxDashStrength", 1000, 0, 5000f);
+        MAX_ALLOWED_DASH_VELOCITY = BUILDER.comment("Server will invalidate the movement and report in console if it goes above this number! Increase accordingly with maxDashStrength").defineInRange("maxAllowedDashVelocity", 1000, 0, 5000f);
         BUILDER.pop();
     }
 

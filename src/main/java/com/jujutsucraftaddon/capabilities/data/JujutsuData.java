@@ -63,7 +63,7 @@ public class JujutsuData {
         nbt.putBoolean("landedFirstBlackFlash", landedFirstBlackFlash);
 
         if (!player.level().isClientSide()) {
-            canHealOthers = AdvancementUtil.isDone((ServerPlayer) player, "jujutsucraftaddon:rct_others");
+            canHealOthers = AdvancementUtil.isDone((ServerPlayer) player, JujutsuAdvancements.RCT_OTHERS);
             infinityOn = player.getPersistentData().getBoolean("infinity");
         }
         nbt.putBoolean("canHealOthers", canHealOthers);
