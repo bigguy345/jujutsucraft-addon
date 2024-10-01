@@ -67,12 +67,13 @@ public class CommonEvents {
                 //Damage to do as a percent of max health to break barrier. If enemy is at full health, it's 25% of that health to be done as barrierdamage to barrier block until it breaks
                 //Decreases as enemy health drops.
                 float damToDoInHealthPercent = Math.min(casterMaxHealth / 1000 * casterHealth / casterMaxHealth, 0.9f);
-                float damAsPercOfMaxHealth = effectiveDamage * ValueUtil.clamp(strongCharge, 1, 3) / casterMaxHealth;
+                float damAsPercOfMaxHealth = effectiveDamage * ValueUtil.clamp(strongCharge, 1, 5) / casterMaxHealth;
+                float clampedDamage = Math.min(damAsPercOfMaxHealth, damToDoInHealthPercent);
                 if (insideDomain)
                     damAsPercOfMaxHealth = Math.min(damAsPercOfMaxHealth * 0.25f, 0.05f);
 
                 CompoundTag blockData = barrierEntity.getPersistentData();
-                float newShatter = blockData.getFloat("shatter") + damAsPercOfMaxHealth;
+                float newShatter = blockData.getFloat("shatter") + clampedDamage;
                 blockData.putFloat("shatter", newShatter);
 
 
@@ -86,8 +87,8 @@ public class CommonEvents {
                 //Blocks surrounding toBreak
                 if (newBreakStage > -1 && newBreakStage != prevBreakStage) {
                     float damage = damAsPercOfMaxHealth * (insideDomain ? 1 : 1);
-                    radius = Math.min(newBreakStage, ValueUtil.lerp(0, 10, damage * 4));
-                    BarrierBreakProgressData.setSurroundingProgress(caster, damage, damToDoInHealthPercent, toBreak, newBreakStage, Math.round(radius));
+                    radius = Math.min(newBreakStage < 8 ? newBreakStage : 18, ValueUtil.lerp(0, 18, damage * 1.25f));
+                    BarrierBreakProgressData.setSurroundingProgress(caster, clampedDamage, damToDoInHealthPercent, toBreak, newBreakStage, Math.round(radius));
                     for (int i = 0; i < (newBreakStage == 9 ? 0 : (newBreakStage + 1) * 4); i++)
                         world.playSound(null, toBreak, ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.glass.break")), SoundSource.PLAYERS, ValueUtil.lerp(0.3f, 1f, shatterPercent), 1F);
                 }
@@ -132,7 +133,6 @@ public class CommonEvents {
                     //Makes it so max shatter radius is 5 inside domain
                     if (insideDomain)
                         radius = ValueUtil.clamp(radius, 2, 5);
-
 
                     //Breaks the blocks & replaces barrier blocks with what they actually were
                     BlockUtil.doMeleeExplosionDomainBarrier(entity, toBreak, Math.round(radius));
@@ -473,9 +473,8 @@ public class CommonEvents {
                     AdvancementUtil.grantAdvancement((ServerPlayer) player, JujutsuAdvancements.RCT_2);
             }
 
-            if (Math.random() <= Config.BLACKFLASH_MAX_CE_GAIN_CHANCE.get()) 
+            if (Math.random() <= Config.BLACKFLASH_MAX_CE_GAIN_CHANCE.get())
                 jjcData.PlayerCursePowerMAX += Config.BLACKFLASH_MAX_CE_GAIN_AMOUNT.get();
-            
         }
     }
 }
