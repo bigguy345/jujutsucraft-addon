@@ -16,6 +16,9 @@ public class Config {
     public static ForgeConfigSpec.DoubleValue RCT_BLACKFLASH_UNLOCK_CHANCE;
     public static ForgeConfigSpec.DoubleValue RCT_OTHERS_UNLOCK_CHANCE;
 
+    public static ForgeConfigSpec.IntValue BLACKFLASH_MAX_CE_GAIN_AMOUNT;
+    public static ForgeConfigSpec.DoubleValue BLACKFLASH_MAX_CE_GAIN_CHANCE;
+
     public static ForgeConfigSpec.DoubleValue DASH_MAX_LEVEL;
     public static ForgeConfigSpec.DoubleValue DASH_MAX_STRENGTH;
     public static ForgeConfigSpec.DoubleValue DASH_LEVEL_GAIN;
@@ -35,8 +38,13 @@ public class Config {
         BUILDER.push("Reversed Cursed Technique");
         MAX_RCT_LEVEL = BUILDER.comment("Max Reversed Cursed Technique level").defineInRange("maxRCTLLevel", 100f, 0, 1000);
         MAX_RCT_LEVEL_AMPLIFIER = BUILDER.comment("Reversed Cursed Technique effect amplifier at max level (linearly interpolates between 0 and this value depending on level to max level ratio)").defineInRange("maxRCTAmplifier", 20, 0, 99);
-        RCT_BLACKFLASH_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Technique\" upon landing a black flash (default 0.2 === 20%)").defineInRange("blackflashRCTUnlockChance", 0, 0.2, 1);
-        RCT_OTHERS_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Tech. Others\" upon first time unlocking \"Reversed Cursed Technique\" (default 0.25 === 25%)").defineInRange("othersRCTUnlockChance", 0, 0.25, 1);
+        RCT_BLACKFLASH_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Technique\" upon landing a black flash (default 0.2 === 20%)").defineInRange("blackflashRCTUnlockChance", 0.2, 0, 1);
+        RCT_OTHERS_UNLOCK_CHANCE = BUILDER.comment("Chance of unlocking \"Reversed Cursed Tech. Others\" upon first time unlocking \"Reversed Cursed Technique\" (default 0.25 === 25%)").defineInRange("othersRCTUnlockChance", 0.25, 0, 1);
+        BUILDER.pop();
+
+        BUILDER.push("Black Flash");
+        BLACKFLASH_MAX_CE_GAIN_CHANCE = BUILDER.comment("Chance of gaining CE upon landing a black flash (default 0.25 === 25%)").defineInRange("blackflashMaxCEGainChance", 0.25, 0, 1);
+        BLACKFLASH_MAX_CE_GAIN_AMOUNT = BUILDER.comment("Player MAX Cursed Energy pool will be increased by this amount upon landing a black flash and succeeding the above blackflashMaxCEGainChance").defineInRange("blackflashMaxCEGainAmount", 500, 0, 10000);
         BUILDER.pop();
 
         BUILDER.push("Dash");

@@ -278,7 +278,6 @@ public class CommonEvents {
                     case 0:
                         debuffRecoverAmmount = 6;
                         debuffRecoverChance = ValueUtil.randomBetween(0.75f, 1);
-                        ;
                         jjcData.PlayerCursePower += jjcData.PlayerCursePowerMAX * 0.25f;
                         zoneDamageMulti = ValueUtil.randomBetween(1, 1.25f);
                         zoneKnockbackMulti = 5;
@@ -473,6 +472,10 @@ public class CommonEvents {
                 else if (!AdvancementUtil.isDone((ServerPlayer) player, JujutsuAdvancements.RCT_2))
                     AdvancementUtil.grantAdvancement((ServerPlayer) player, JujutsuAdvancements.RCT_2);
             }
+
+            if (Math.random() <= Config.BLACKFLASH_MAX_CE_GAIN_CHANCE.get()) 
+                jjcData.PlayerCursePowerMAX += Config.BLACKFLASH_MAX_CE_GAIN_AMOUNT.get();
+            
         }
     }
 }
