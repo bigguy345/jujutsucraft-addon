@@ -1,7 +1,7 @@
 package com.jujutsucraftaddon.client.render;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
-import com.jujutsucraftaddon.client.KeyHandler;
+import com.jujutsucraftaddon.client.key.KeyHandler;
 import com.jujutsucraftaddon.network.packet.BarrierBreakProgessPacket;
 import com.jujutsucraftaddon.skill.DashSkill;
 import com.jujutsucraftaddon.utility.JujuUtil;
