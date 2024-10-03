@@ -52,7 +52,7 @@ public class KeyHandler {
 
         //Checks if TNT toggle key is pressed only once (hence GLFW_PRESS. Use GLFW_REPEAT if you want it to fire constantly as long as key is held down)
         if (Debug.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_PRESS)
-            PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi")); //sends a packet to server that says "hi"
+            PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("hi",GLFW.GLFW_PRESS)); //sends a packet to server that says "hi"
 
 
         if (Dash.isActiveAndMatches(key) && event.getAction() == GLFW.GLFW_RELEASE) {
@@ -112,6 +112,7 @@ public class KeyHandler {
         if (mc.screen != null)
             return;
 
+        ImprovedKeyMapping.tick();
 
         ////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////

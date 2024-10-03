@@ -8,26 +8,35 @@ import net.minecraftforge.network.NetworkEvent;
 
 public class KeyInputPacket extends Packet {
 
+    public static byte RELEASE = 0, PRESS = 1, HOLD = 2;
     public String keyName;
+    public byte action;
 
-    public KeyInputPacket(String keyName) {
+    public KeyInputPacket(String keyName, int action) {
         this.keyName = keyName;
+        this.action = (byte) action;
     }
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeUtf(keyName);
+        buf.writeByte(action);
     }
 
     public KeyInputPacket(FriendlyByteBuf buf) {
         keyName = buf.readUtf();
+        action = buf.readByte();
     }
 
     public void handle(Player player, NetworkEvent.Context context) {
         ServerLevel world = (ServerLevel) player.level();
         switch (keyName.toLowerCase()) {
+ 
             case "hi":
-           //     player.setHealth(1);
-               world.getServer().getCommands().performPrefixedCommand(player.getServer().createCommandSourceStack(), "kill @e[type=!minecraft:player]");
+                //                data.levels.incrementDashLevel(100);
+                //     player.setHealth(1);
+                //data.data.PlayerSelectCurseTechnique = 20;
+                //  player.getPersistentData().putInt("addonSelectTechnique", 20);
+                // world.getServer().getCommands().performPrefixedCommand(player.getServer().createCommandSourceStack(), "kill @e[type=!minecraft:player]");
                 break;
         }
     }
