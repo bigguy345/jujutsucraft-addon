@@ -1,5 +1,6 @@
 package com.jujutsucraftaddon.network.packet;
 
+import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import com.jujutsucraftaddon.network.Packet;
 import com.jujutsucraftaddon.utility.JujuUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
@@ -39,7 +40,9 @@ public class KeyInputPacket extends Packet {
     private JujutsuData data;
 
     public void handle(Player player, NetworkEvent.Context context) {
-        ServerLevel world = (ServerLevel) player.level();
+        this.player = (ServerPlayer) player;
+        world = (ServerLevel) player.level();
+        data = JujutsuData.get(player);
         switch (keyName.toLowerCase()) {
             case "domain_expansion":
                 domainExpansionKey();
