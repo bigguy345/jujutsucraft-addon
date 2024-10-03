@@ -11,6 +11,7 @@ import com.jujutsucraftaddon.utility.AdvancementUtil;
 import com.jujutsucraftaddon.utility.ValueUtil;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
+import net.mcreator.jujutsucraft.procedures.KeyChangeTechniqueOnKeyPressedProcedure;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -105,6 +106,12 @@ public class JujutsuData {
 
     public JujutsucraftModVariables.PlayerVariables getPlayerVariables() {
         return data = player.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables());
+    }
+
+    public void setSelectedTechnique(double technique) {
+        data.PlayerSelectCurseTechnique = technique;
+        data.noChangeTechnique = true;
+        KeyChangeTechniqueOnKeyPressedProcedure.execute(player.level(), player.getX(), player.getY(), player.getZ(), player);
     }
 
     public void syncTracking() {

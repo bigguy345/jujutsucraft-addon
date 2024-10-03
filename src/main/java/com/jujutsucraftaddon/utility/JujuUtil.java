@@ -1,5 +1,6 @@
 package com.jujutsucraftaddon.utility;
 
+import com.jujutsucraftaddon.capabilities.data.JujutsuData;
 import net.mcreator.jujutsucraft.entity.DomainExpansionEntityEntity;
 import net.mcreator.jujutsucraft.init.JujutsucraftModMobEffects;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
@@ -71,5 +72,23 @@ public class JujuUtil {
     public static boolean isWithinDomain(LivingEntity caster, LivingEntity within) {
         List entites = getEntitiesWithinDomain(caster);
         return entites != null && entites.contains(within);
+    }
+
+    /**
+     * @param data
+     * @return Check if the character chosen has a domain and if player has unlocked it. i.e if Yuuji, returns false since character doesn't have domain.
+     * If gojo and no domain advancement unlocked, returns false, else if unlocked returns true
+     */
+    public static boolean hasDomainExpansion(JujutsuData data) {
+        boolean has = false;
+        double old = data.data.PlayerSelectCurseTechnique;
+        data.setSelectedTechnique(20);
+
+        if (data.data.PlayerSelectCurseTechnique == 20 || data.data.PlayerSelectCurseTechnique == 21)
+            has = true;
+        
+        data.setSelectedTechnique(old);
+        data.data.noChangeTechnique = false;
+        return has;
     }
 }

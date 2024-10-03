@@ -24,6 +24,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -35,15 +36,25 @@ public class KeyHandler {
     public static final KeyMapping Dash = new KeyMapping("key.dash", GLFW.GLFW_KEY_X, "key.category.jujutsucraftaddon");
     public static final KeyMapping Debug = new KeyMapping("Debugging key", GLFW.GLFW_KEY_UNKNOWN, "key.category.jujutsucraftaddon");
 
+    public static final ImprovedKeyMapping Domain_Expansion = new ImprovedKeyMapping("key.domain_expansion", GLFW.GLFW_KEY_H, "key.category.jujutsucraftaddon") {
+        public void onAction(int action) {
+            super.onAction(action);
+            PacketHandler.CHANNEL.sendToServer(new KeyInputPacket("domain_expansion", action));
+        }
+    };
+
+    public static Minecraft mc = Minecraft.getInstance();
+
     //Registers all of this mod's keys on game startup
     public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
         event.register(Second_FN);
         event.register(Dash);
         event.register(Debug);
+        event.register(Domain_Expansion);
     }
 
     //This fires whenever a key is pressed (either once, or held down continuously) in game
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onKeyInput(InputEvent.Key event) {
         InputConstants.Key key = InputConstants.getKey(event.getKey(), event.getScanCode());
         Minecraft mc = Minecraft.getInstance();
