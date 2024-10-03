@@ -2,6 +2,7 @@ package com.jujutsucraftaddon.capabilities.data;
 
 import com.jujutsucraftaddon.Config;
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
+import com.jujutsucraftaddon.client.ClientCache;
 import com.jujutsucraftaddon.constants.JujutsuAdvancements;
 import com.jujutsucraftaddon.effects.IMobEffectInstance;
 import com.jujutsucraftaddon.network.PacketHandler;
@@ -20,6 +21,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -102,6 +105,11 @@ public class JujutsuData {
 
     public static JujutsuData get(Player player) {
         return player.getCapability(ModCapabilities.PLAYER_JUJUTSU_DATA, (Direction) null).orElse(new JujutsuData(player));
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public static JujutsuData getClient() {
+        return ClientCache.getJujutsuData();
     }
 
     public JujutsucraftModVariables.PlayerVariables getPlayerVariables() {

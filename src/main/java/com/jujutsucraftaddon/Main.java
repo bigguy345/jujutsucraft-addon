@@ -3,9 +3,10 @@ package com.jujutsucraftaddon;
 import com.jujutsucraftaddon.Items.ModItems;
 import com.jujutsucraftaddon.blocks.ModBlocks;
 import com.jujutsucraftaddon.capabilities.ModCapabilities;
-import com.jujutsucraftaddon.client.KeyHandler;
+import com.jujutsucraftaddon.client.ClientCache;
 import com.jujutsucraftaddon.client.ModSounds;
 import com.jujutsucraftaddon.client.animation.Animations;
+import com.jujutsucraftaddon.client.key.KeyHandler;
 import com.jujutsucraftaddon.client.render.RenderEvents;
 import com.jujutsucraftaddon.client.shader.ModShaders;
 import com.jujutsucraftaddon.effects.ModEffects;
@@ -88,6 +89,8 @@ public class Main {
             MinecraftForge.EVENT_BUS.register(new KeyHandler());
             MinecraftForge.EVENT_BUS.register(new ModShaders());
             MinecraftForge.EVENT_BUS.register(new RenderEvents());
+            MinecraftForge.EVENT_BUS.addListener(ClientCache::clientDisconnect);
+            
             MOD_EVENT_BUS.addListener(KeyHandler::registerKeyMappings);
             Animations.setup();
         }
