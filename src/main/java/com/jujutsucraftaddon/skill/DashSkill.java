@@ -53,7 +53,7 @@ public class DashSkill {
 
         ((ILivingEntity) player).setIsDashing(true);
         player.getPersistentData().putBoolean("killFallDamage", true);
-        System.out.println("strength " + strength);
+        //System.out.println("strength " + strength);
     }
 
     public void tick(JujutsuData data) {

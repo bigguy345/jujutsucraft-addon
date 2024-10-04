@@ -1,6 +1,7 @@
 package com.jujutsucraftaddon.network.packet;
 
 import com.jujutsucraftaddon.capabilities.data.JujutsuData;
+import com.jujutsucraftaddon.client.ClientCache;
 import com.jujutsucraftaddon.network.Packet;
 import net.mcreator.jujutsucraft.network.JujutsucraftModVariables;
 import net.minecraft.client.Minecraft;
@@ -38,6 +39,8 @@ public class SyncJujutsuData extends Packet {
             JujutsuData jujutsuData = JujutsuData.get(pl);
             jujutsuData.readNBT(data.writeNBT());
             jujutsuData.data = entity.getCapability(JujutsucraftModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new JujutsucraftModVariables.PlayerVariables());
+            if (pl.equals(Minecraft.getInstance().player))
+                ClientCache.data = jujutsuData;
         }
     }
 }

@@ -43,7 +43,7 @@ public class DashPacket extends Packet {
         } else {
             data.currentDash = null;
             ((ILivingEntity) player).setIsDashing(false);
-            System.out.println("velocity " + dash.speed);
+            //System.out.println("velocity " + dash.speed);
             if (dash.speed > 5) {
                 float speedRatio = dash.speed / 23;
                 BlockUtil.doSphericalExplosion(player, player.blockPosition(), (int) (ValueUtil.lerp(4f, 12, speedRatio)));
