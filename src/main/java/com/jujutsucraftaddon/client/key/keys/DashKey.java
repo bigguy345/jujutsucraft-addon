@@ -8,6 +8,7 @@ import com.jujutsucraftaddon.client.key.KeyHandler;
 import com.jujutsucraftaddon.network.PacketHandler;
 import com.jujutsucraftaddon.network.packet.DashPacket;
 import com.jujutsucraftaddon.skill.DashSkill;
+import com.jujutsucraftaddon.utility.ValueUtil;
 import dev.kosmx.playerAnim.core.util.Ease;
 import dev.kosmx.playerAnim.core.util.Easing;
 import net.minecraft.resources.ResourceLocation;
@@ -36,17 +37,17 @@ public class DashKey extends ImprovedKeyMapping {
             else
                 newZ = Math.copySign(Math.max(Math.abs(lookvec.z), xzMin), lookvec.z);
 
-            if (DASH_CHARGE < 0.3)
+            if (mc.player.onGround())
                 newY = Mth.clamp(lookvec.y, 0.2f, 0.35f);
             else
-                newY = Math.copySign(Math.max(Math.abs(lookvec.y), 0.25), lookvec.y);
+                newY = Math.copySign(Math.max(Math.abs(lookvec.y), 0.25), lookvec.y) * ValueUtil.lerp(0.5, 1, DASH_CHARGE);
 
             Vec3 vec1 = new Vec3(newX, newY, newZ);
 
 
             float dashLevel = data.levels.getDashLevel();
             double strength = calculateStrength(DASH_CHARGE, dashLevel); //DASH LEVEL AS 2ND ARG
-            Vec3 vec2 = vec1.multiply(strength, 2 + strength * Easing.inQuad(dashLevel / ClientCache.DASH_MAX_LEVEL), strength);
+            Vec3 vec2 = vec1.multiply(strength, Math.max(1, strength * Easing.inQuad(dashLevel / ClientCache.DASH_MAX_LEVEL)), strength);
 
             //Limits how high up dash can go
             Vec3 launchVec = new Vec3(vec2.x, Math.min(vec2.y, 5f), vec2.z);
