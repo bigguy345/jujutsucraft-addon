@@ -28,6 +28,11 @@ public class RangeAttackProcedureMixin {
 
     @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;getBoolean(Ljava/lang/String;)Z", ordinal = 2, shift = At.Shift.BEFORE, remap = true))
     private static void blackFlashChance(LevelAccessor world, double x, double y, double z, Entity entity, CallbackInfo ci, @Local(name = "BlackFlash") LocalBooleanRef BlackFlash, @Local(name = "blackflashable") LocalBooleanRef blackflashable, @Local(name = "damage_source_player") LocalDoubleRef damage_source_player) {
+
+        if(!(blackflashable.get() && entity.getPersistentData().getBoolean("attack"))){
+            return;
+        }
+
         if (entity instanceof Player player) {
             JujutsuData data = JujutsuData.get(player);
             JujutsucraftModVariables.PlayerVariables jjcData = data.getPlayerVariables();
